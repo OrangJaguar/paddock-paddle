@@ -197,22 +197,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     try {
       console.log('Verifying email with code:', verificationCode);
 
-      // Call our backend function to verify the email code
-      const response = await base44.functions.invoke('verifyEmailCode', {
-        email: signupData.email.trim(),
-        code: verificationCode.trim()
-      });
+      // FIXED: Call Base44's client-side email verification method directly
+      await base44.auth.confirmSignup(signupData.email.trim(), verificationCode.trim());
 
-      console.log('Verification response:', response);
+      console.log('Email verified successfully! Proceeding to payment...');
 
-      if (response?.data?.success) {
-        console.log('Email verified successfully! Proceeding to payment...');
-        // Email verified - now proceed to payment
-        proceedToPayment();
-      } else {
-        console.error('Verification failed:', response?.data?.error);
-        setError(response?.data?.error || "Invalid verification code. Please check your email and try again.");
-      }
+      // Email verified - now proceed to payment
+      proceedToPayment();
     } catch (error) {
       console.error('Verification error:', error);
       setError("Invalid verification code. Please check your email and try again.");
