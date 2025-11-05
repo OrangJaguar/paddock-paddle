@@ -1,4 +1,6 @@
 
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -195,43 +197,34 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     try {
       console.log('Verifying email with code:', verificationCode);
 
-      // Call our backend function to verify the email code
-      const response = await base44.functions.invoke('verifyEmailCode', {
-        email: signupData.email.trim(),
-        code: verificationCode.trim()
-      });
+      // Use Base44's correct email verification method
+      await base44.auth.confirmEmailVerification(signupData.email.trim(), verificationCode.trim());
 
-      console.log('Verification response:', response);
+      console.log('✅ Email verified successfully!');
 
-      if (response?.data?.success) {
-        console.log('Email verified successfully! Proceeding to payment...');
-        // Email verified - now proceed to payment
-        proceedToPayment();
-      } else {
-        console.error('Verification failed:', response?.data?.error);
-        setError(response?.data?.error || "Invalid verification code. Please check your email and try again.");
-      }
+      // After verification, log the user in
+      console.log('Logging user in...');
+      await base44.auth.login(signupData.email.trim(), signupData.password);
+
+      console.log('✅ User logged in successfully! Proceeding to payment...');
+
+      // Now proceed to payment (user is verified and logged in)
+      await proceedToPayment();
     } catch (error) {
       console.error('Verification error:', error);
       setError("Invalid verification code. Please check your email and try again.");
+      setIsSubmitting(false); // Make sure to reset submitting state on error
     }
-
-    setIsSubmitting(false);
   };
 
   const proceedToPayment = async () => {
-    setIsSubmitting(true);
-    setSignupStep(3);
+    setSignupStep(3); // Move to payment step
+    setIsSubmitting(true); // Indicate submitting for payment preparation
 
     try {
-      // Store credentials for auto-login after payment
-      sessionStorage.setItem('paddock_paddle_signup', JSON.stringify({
-        email: signupData.email.trim(),
-        password: signupData.password,
-        full_name: signupData.full_name.trim()
-      }));
+      console.log('Creating Stripe checkout session...');
 
-      // Create Stripe checkout
+      // Create Stripe checkout - user is already logged in, no need for sessionStorage
       const checkoutResponse = await base44.functions.invoke('createStripeCheckout', {
         email: signupData.email.trim(),
         customerName: signupData.full_name.trim(),
@@ -243,20 +236,20 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
       });
 
       if (checkoutResponse?.data?.url) {
-        console.log('Redirecting to Stripe checkout:', checkoutResponse.data.url);
+        console.log('✅ Redirecting to Stripe checkout:', checkoutResponse.data.url);
         window.location.href = checkoutResponse.data.url;
       } else {
-        console.error('No checkout URL received');
+        console.error('❌ No checkout URL received');
         setError("Failed to create payment session. Please contact support.");
         setSignupStep(2); // Revert to verification step if payment setup fails
+        setIsSubmitting(false); // Reset submitting state
       }
     } catch (error) {
-      console.error('Error creating checkout:', error);
+      console.error('❌ Error creating checkout:', error);
       setError("Failed to create payment session. Please contact support.");
       setSignupStep(2); // Revert to verification step if payment setup fails
+      setIsSubmitting(false); // Reset submitting state
     }
-
-    setIsSubmitting(false);
   };
 
   const handleForgotPassword = async (e) => {
