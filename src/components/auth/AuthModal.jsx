@@ -201,11 +201,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     try {
       console.log('Verifying email with code:', verificationCode);
 
-      // FIXED: Use the correct Base44 method - verifyOtp
-      await base44.auth.verifyOtp(
-        signupData.email.trim(),
-        verificationCode.trim()
-      );
+      // FIXED: Pass parameters as an object with email and otpCode keys
+      await base44.auth.verifyOtp({
+        email: signupData.email.trim(),
+        otpCode: verificationCode.trim()
+      });
 
       console.log('✅ Email verified successfully!');
 
