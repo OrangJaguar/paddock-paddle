@@ -192,6 +192,10 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
       return;
     }
 
+    // --- DEBUG: See what functions are available ---
+    console.log('--- Base44 Auth Object ---', base44.auth);
+    // -----------------------------------------------
+
     setIsSubmitting(true);
 
     try {
