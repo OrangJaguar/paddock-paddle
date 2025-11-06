@@ -92,7 +92,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     setIsSubmitting(true);
 
     try {
-      await base44.auth.login(loginData.email, loginData.password);
+      // FIXED: Use the correct Base44 login method
+      await base44.auth.loginViaEmailPassword(loginData.email, loginData.password);
       onSuccess?.();
       onClose();
     } catch (err) {

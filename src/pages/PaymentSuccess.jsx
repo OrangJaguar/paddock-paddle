@@ -10,83 +10,33 @@ export default function PaymentSuccess() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const [loginAttempts, setLoginAttempts] = useState(0);
-  const [statusMessage, setStatusMessage] = useState("Processing your payment...");
 
   useEffect(() => {
-    autoLogin();
+    checkAuthAndLoadUser();
   }, []);
 
-  const autoLogin = async () => {
+  const checkAuthAndLoadUser = async () => {
     try {
-      console.log('=== AUTO-LOGIN START ===');
-      setStatusMessage("Checking authentication status...");
+      console.log('=== PAYMENT SUCCESS PAGE - Checking Auth ===');
       
-      // First check if already logged in
+      // The user should already be logged in from the signup flow
+      // We just need to verify and fetch their data
       const isAuth = await base44.auth.isAuthenticated();
       console.log('Is authenticated:', isAuth);
       
       if (isAuth) {
-        console.log('User is already authenticated, fetching user data...');
+        console.log('User is authenticated, fetching user data...');
         const currentUser = await base44.auth.me();
-        console.log('Current user:', currentUser);
+        console.log('User data loaded:', currentUser);
         setUser(currentUser);
-        setIsLoading(false);
-        return;
-      }
-
-      // Get stored credentials from signup
-      const storedSignup = sessionStorage.getItem('paddock_paddle_signup');
-      console.log('Stored signup data exists:', !!storedSignup);
-      
-      if (storedSignup && loginAttempts < 8) {
-        const { email, password } = JSON.parse(storedSignup);
-        console.log('Attempting auto-login for:', email, 'Attempt:', loginAttempts + 1);
-        
-        // Progressive delay: start with 3 seconds, increase each attempt
-        const delay = 3000 + (loginAttempts * 2000);
-        setStatusMessage(`Setting up your account... (attempt ${loginAttempts + 1})`);
-        
-        await new Promise(resolve => setTimeout(resolve, delay));
-        
-        try {
-          console.log('Calling base44.auth.login...');
-          await base44.auth.login(email, password);
-          console.log('Login successful!');
-          
-          setStatusMessage("Login successful! Loading your profile...");
-          const currentUser = await base44.auth.me();
-          console.log('User profile loaded:', currentUser);
-          
-          setUser(currentUser);
-          sessionStorage.removeItem('paddock_paddle_signup');
-          console.log('=== AUTO-LOGIN SUCCESS ===');
-        } catch (loginError) {
-          console.error('Login attempt failed:', loginError);
-          console.log('Error details:', {
-            message: loginError.message,
-            response: loginError.response?.data,
-            status: loginError.response?.status
-          });
-          
-          // Check if it's because email isn't verified yet or payment not processed
-          if (loginAttempts < 7) {
-            console.log('Retrying login...');
-            setLoginAttempts(prev => prev + 1);
-            setTimeout(() => autoLogin(), 2000);
-            return;
-          } else {
-            console.log('Max login attempts reached');
-            setStatusMessage("Account setup in progress. You can log in manually.");
-          }
-        }
-      } else if (loginAttempts >= 8) {
-        console.log('Max attempts reached, stopping auto-login');
-        setStatusMessage("Your account is being set up. Please try logging in.");
+      } else {
+        console.log('User is not authenticated (unexpected - they should be logged in already)');
+        // If somehow they're not logged in, they can use the "Go to Homepage & Log In" button
       }
     } catch (error) {
-      console.error('Error during auto-login:', error);
-      setStatusMessage("Payment successful! You can now log in to your account.");
+      console.error('Error checking auth:', error);
+      // If there's an error, just show the success message without user data
+      // They can still log in manually
     }
     
     setIsLoading(false);
@@ -99,16 +49,11 @@ export default function PaymentSuccess() {
           <CardContent className="p-12 text-center">
             <Loader2 className="w-16 h-16 text-ranch-red mx-auto mb-4 animate-spin" />
             <h2 className="text-2xl font-bold text-ranch-charcoal mb-2">
-              {statusMessage}
+              Loading your account...
             </h2>
             <p className="text-gray-600">
               Please wait while we finalize your membership
             </p>
-            {loginAttempts > 0 && (
-              <p className="text-sm text-gray-500 mt-2">
-                Setting up your account... This may take a moment.
-              </p>
-            )}
           </CardContent>
         </Card>
       </div>
@@ -174,13 +119,20 @@ export default function PaymentSuccess() {
             <div className="space-y-4">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
                 <p className="font-semibold mb-2">Your Account is Ready!</p>
-                <p>Your payment has been processed and your account is being finalized. You can now log in using your email and password to access all features!</p>
+                <p>Your payment has been processed and your account is active. You should already be logged in! If you see this message, try refreshing the page or clicking the button below to return to the homepage.</p>
               </div>
+              <Button
+                onClick={() => window.location.reload()}
+                variant="outline"
+                className="w-full mb-2"
+              >
+                Refresh Page
+              </Button>
               <Button
                 onClick={() => navigate(createPageUrl("Homepage"))}
                 className="w-full ranch-gradient text-white"
               >
-                Go to Homepage & Log In
+                Go to Homepage
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
