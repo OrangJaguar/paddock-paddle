@@ -209,9 +209,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
       console.log('✅ Email verified successfully!');
 
-      // After verification, log the user in
+      // After verification, log the user in using the correct function name
       console.log('Logging user in...');
-      await base44.auth.login(signupData.email.trim(), signupData.password);
+      await base44.auth.loginViaEmailPassword(
+        signupData.email.trim(), 
+        signupData.password
+      );
 
       console.log('✅ User logged in successfully! Proceeding to payment...');
 
