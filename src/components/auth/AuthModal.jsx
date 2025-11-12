@@ -323,7 +323,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     setIsSubmitting(true);
 
     try {
-      await base44.auth.confirmPasswordReset(resetEmail, resetCode, newPassword);
+      // Use the correct Base44 SDK method
+      await base44.auth.resetPasswordViaOtp({
+        email: resetEmail,
+        otpCode: resetCode,
+        newPassword: newPassword
+      });
       
       setShowForgotPassword(false);
       setResetCodeSent(false);
@@ -335,7 +340,25 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
       alert("Password reset successful! Please log in with your new password.");
     } catch (err) {
       console.error('Password reset confirmation error:', err);
-      setError("Failed to reset password. Please check your code and try again.");
+      
+      let errorMessage = "Failed to reset password. Please check your code and try again.";
+      
+      if (err?.data?.detail) {
+        if (typeof err.data.detail === 'string') {
+          errorMessage = err.data.detail;
+        } else if (Array.isArray(err.data.detail)) {
+          errorMessage = err.data.detail.map(e => e.msg || e.message).join('; ');
+        }
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      
+      const errorStr = String(errorMessage).toLowerCase();
+      if (errorStr.includes('invalid') || errorStr.includes('expired')) {
+        errorMessage = "Invalid or expired code. Please request a new password reset.";
+      }
+      
+      setError(errorMessage);
     }
 
     setIsSubmitting(false);
