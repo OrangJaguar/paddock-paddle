@@ -61,6 +61,78 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
   const [showMembershipInfo, setShowMembershipInfo] = useState(false);
   const [verificationCode, setVerificationCode] = useState(""); // State for signup email verification code
 
+  // 🔍 DEBUG: Log Base44 Auth API on mount
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && base44?.auth) {
+      console.log('%c╔══════════════════════════════════════════════════════════╗', 'color: #C41E3A; font-weight: bold;');
+      console.log('%c║  BASE44 AUTH SDK - API REFERENCE                         ║', 'color: #C41E3A; font-weight: bold;');
+      console.log('%c╚══════════════════════════════════════════════════════════╝', 'color: #C41E3A; font-weight: bold;');
+      console.log('');
+      console.log('%c📚 Available Methods:', 'color: #2D2D2D; font-weight: bold; font-size: 14px;');
+      console.log('');
+      
+      const authMethods = Object.keys(base44.auth).filter(key => typeof base44.auth[key] === 'function');
+      const authProperties = Object.keys(base44.auth).filter(key => typeof base44.auth[key] !== 'function');
+      
+      authMethods.forEach((method, index) => {
+        const func = base44.auth[method];
+        const funcStr = func.toString();
+        
+        // Try to extract parameter names
+        let params = 'unknown parameters';
+        try {
+          const match = funcStr.match(/\(([^)]*)\)/);
+          if (match) {
+            params = match[1] || 'no parameters';
+          }
+        } catch (e) {
+          // ignore
+        }
+        
+        console.log(`%c${index + 1}. base44.auth.${method}%c(${params})`, 
+          'color: #C41E3A; font-weight: bold;', 
+          'color: #666; font-style: italic;'
+        );
+      });
+      
+      if (authProperties.length > 0) {
+        console.log('');
+        console.log('%c🔧 Properties:', 'color: #2D2D2D; font-weight: bold; font-size: 14px;');
+        authProperties.forEach((prop, index) => {
+          console.log(`%c${index + 1}. base44.auth.${prop}`, 'color: #9CAF88;');
+        });
+      }
+      
+      console.log('');
+      console.log('%c💡 USAGE EXAMPLES:', 'color: #2D2D2D; font-weight: bold; font-size: 14px;');
+      console.log('');
+      console.log('%c// Login', 'color: #666; font-style: italic;');
+      console.log('await base44.auth.loginViaEmailPassword(email, password);');
+      console.log('');
+      console.log('%c// Register', 'color: #666; font-style: italic;');
+      console.log('await base44.auth.register({ email, password, full_name, ... });');
+      console.log('');
+      console.log('%c// Verify Email OTP', 'color: #666; font-style: italic;');
+      console.log('await base44.auth.verifyOtp({ email, otpCode });');
+      console.log('');
+      console.log('%c// Get Current User', 'color: #666; font-style: italic;');
+      console.log('const user = await base44.auth.me();');
+      console.log('');
+      console.log('%c// Check Auth', 'color: #666; font-style: italic;');
+      console.log('const isAuth = await base44.auth.isAuthenticated();');
+      console.log('');
+      console.log('%c// Logout', 'color: #666; font-style: italic;');
+      console.log('await base44.auth.logout();');
+      console.log('');
+      console.log('%c═══════════════════════════════════════════════════════════', 'color: #C41E3A;');
+      console.log('');
+      console.log('%c⚠️  TIP: If a method fails with "is not a function", check this list for the correct name!', 
+        'background: #FEE2E2; color: #991B1B; padding: 8px; border-radius: 4px; font-weight: bold;'
+      );
+      console.log('');
+    }
+  }, []);
+
   const [loginData, setLoginData] = useState({
     email: "",
     password: ""
