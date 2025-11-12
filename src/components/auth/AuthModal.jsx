@@ -268,7 +268,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     setIsSubmitting(true);
 
     try {
-      await base44.auth.requestPasswordReset(resetEmail);
+      // DEBUG: Log available auth methods
+      console.log('🔍 Available base44.auth methods:', Object.keys(base44.auth));
+      
+      // Try the correct method name for Base44 SDK
+      await base44.auth.sendPasswordResetOtp(resetEmail);
       setResetCodeSent(true);
     } catch (err) {
       console.error('Password reset request error:', err);
@@ -292,6 +296,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
         errorMessage = "No account found with this email address. Please check your email or sign up for a new account.";
       } else if (errorStr.includes('email not verified')) {
         errorMessage = "This email is not verified yet. Please complete the signup process first.";
+      } else if (errorStr.includes('not a function')) {
+        errorMessage = "Password reset is temporarily unavailable. Please contact support at info@paddockandpaddle.com";
       }
       
       setError(errorMessage);
