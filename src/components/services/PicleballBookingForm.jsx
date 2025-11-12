@@ -202,20 +202,31 @@ export default function PicleballBookingForm({ onClose }) {
     setIsSubmitting(true);
     
     try {
+      // --- FIX: Fetch fresh user object to ensure email matches auth token ---
+      const freshUser = await base44.auth.me();
+      
+      // Check if user (or email) is somehow missing
+      if (!freshUser || !freshUser.email) {
+        throw new Error("User authentication failed. Please log out and log back in.");
+      }
+
+      // Now, build the booking data with the FRESH user
       const bookingData = {
         ...formData,
-        name: user.full_name,
-        email: user.email,
-        phone: user.phone || ""
+        name: freshUser.full_name,
+        email: freshUser.email,
+        phone: freshUser.phone || ""
       };
       
+      // 1. Create the booking
       await base44.entities.PicleballBooking.create(bookingData);
       
+      // 2. Prepare emails
       const courtsList = formData.selected_courts.sort((a, b) => a - b).map(c => `Court ${c}`).join(', ');
       
       const customerEmailBody = `
         <div style="font-family: sans-serif; line-height: 1.6;">
-          <h2>Thank you for your request, ${user.full_name}!</h2>
+          <h2>Thank you for your request, ${freshUser.full_name}!</h2>
           <p>We've received your pickleball court reservation request for Paddock & Paddle. Please note, this is not a final confirmation.</p>
           <p>Our team will review your request and contact you within 24 hours to confirm availability and provide payment details.</p>
           <hr>
@@ -234,13 +245,13 @@ export default function PicleballBookingForm({ onClose }) {
       const adminEmailBody = `
         <div style="font-family: sans-serif; line-height: 1.6;">
           <h2>New Pickleball Booking Request</h2>
-          <p>A new reservation request has been submitted through the website.</p>
+          <p>A new reservation request has been submitted by ${freshUser.full_name}.</p>
           <hr>
           <h3>Booking Details:</h3>
           <ul>
-            <li><strong>Name:</strong> ${user.full_name}</li>
-            <li><strong>Email:</strong> ${user.email}</li>
-            <li><strong>Phone:</strong> ${user.phone || 'Not provided'}</li>
+            <li><strong>Name:</strong> ${freshUser.full_name}</li>
+            <li><strong>Email:</strong> ${freshUser.email}</li>
+            <li><strong>Phone:</strong> ${freshUser.phone || 'Not provided'}</li>
             <li><strong>Selected Courts:</strong> ${courtsList}</li>
             <li><strong>Date:</strong> ${formData.preferred_date}</li>
             <li><strong>Time:</strong> ${formData.preferred_time}</li>
@@ -250,38 +261,41 @@ export default function PicleballBookingForm({ onClose }) {
           <p>Please review and contact the customer to confirm.</p>
         </div>
       `;
-
+      
+      // 3. Send emails
       await Promise.all([
         base44.integrations.Core.SendEmail({
-          to: user.email,
+          to: freshUser.email,
           subject: `Your Paddock & Paddle Pickleball Request!`,
           body: customerEmailBody,
           from_name: "Paddock & Paddle"
         }),
         base44.integrations.Core.SendEmail({
           to: "info@paddockandpaddle.com",
-          subject: `New Pickleball Request from ${user.full_name}`,
+          subject: `New Pickleball Request from ${freshUser.full_name}`,
           body: adminEmailBody,
           from_name: "Paddock & Paddle Website"
         })
       ]);
 
-      // Store booking details for success page
+      // 4. Store booking details for success page
       sessionStorage.setItem('bookingSuccess', JSON.stringify({
         type: 'pickleball',
         courts: courtsList,
         date: formData.preferred_date,
         time: formData.preferred_time,
         duration: formData.duration.replace('_', ' '),
-        userName: user.full_name
+        userName: freshUser.full_name
       }));
 
-      // Redirect to success page
+      // 5. Redirect to success page
       window.location.href = '/booking-success';
     } catch (error) {
       console.error("Error submitting booking:", error);
+      alert("Failed to submit booking. Please try again or contact support.");
     }
     
+    // We only reach this on failure, so we can stop the spinner
     setIsSubmitting(false);
   };
 
