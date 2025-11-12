@@ -340,11 +340,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     setIsSubmitting(true);
 
     try {
-      // DEBUG: Log available auth methods
-      console.log('🔍 Available base44.auth methods:', Object.keys(base44.auth));
-      
-      // Try the correct method name for Base44 SDK
-      await base44.auth.sendPasswordResetOtp(resetEmail);
+      // ✅ CORRECT: Use Token-based password reset (not OTP)
+      await base44.auth.resetPasswordRequest(resetEmail);
       setResetCodeSent(true);
     } catch (err) {
       console.error('Password reset request error:', err);
@@ -368,8 +365,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
         errorMessage = "No account found with this email address. Please check your email or sign up for a new account.";
       } else if (errorStr.includes('email not verified')) {
         errorMessage = "This email is not verified yet. Please complete the signup process first.";
-      } else if (errorStr.includes('not a function')) {
-        errorMessage = "Password reset is temporarily unavailable. Please contact support at info@paddockandpaddle.com";
       }
       
       setError(errorMessage);
@@ -378,63 +373,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     setIsSubmitting(false);
   };
 
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (!resetCode || resetCode.length !== 6) {
-      setError("Please enter the 6-digit code from your email");
-      return;
-    }
-
-    if (!validatePassword(newPassword)) {
-      setError("New password does not meet all requirements");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Use the correct Base44 SDK method
-      await base44.auth.resetPasswordViaOtp({
-        email: resetEmail,
-        otpCode: resetCode,
-        newPassword: newPassword
-      });
-      
-      setShowForgotPassword(false);
-      setResetCodeSent(false);
-      setResetEmail("");
-      setResetCode("");
-      setNewPassword("");
-      setError("");
-      
-      alert("Password reset successful! Please log in with your new password.");
-    } catch (err) {
-      console.error('Password reset confirmation error:', err);
-      
-      let errorMessage = "Failed to reset password. Please check your code and try again.";
-      
-      if (err?.data?.detail) {
-        if (typeof err.data.detail === 'string') {
-          errorMessage = err.data.detail;
-        } else if (Array.isArray(err.data.detail)) {
-          errorMessage = err.data.detail.map(e => e.msg || e.message).join('; ');
-        }
-      } else if (err?.message) {
-        errorMessage = err.message;
-      }
-      
-      const errorStr = String(errorMessage).toLowerCase();
-      if (errorStr.includes('invalid') || errorStr.includes('expired')) {
-        errorMessage = "Invalid or expired code. Please request a new password reset.";
-      }
-      
-      setError(errorMessage);
-    }
-
-    setIsSubmitting(false);
-  };
+  // ❌ REMOVED: This function is no longer needed
+  // Password reset completion now happens on dedicated ResetPassword page
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -483,49 +423,38 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
                 </div>
               </form>
             ) : (
-              <form onSubmit={handleResetPassword} className="space-y-4 mt-4">
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-
+              <div className="space-y-4 mt-4">
                 <Alert>
                   <Mail className="h-4 w-4" />
-                  <AlertDescription>Code sent to {resetEmail}</AlertDescription>
+                  <AlertDescription>
+                    <strong>Password reset link sent to {resetEmail}!</strong>
+                  </AlertDescription>
                 </Alert>
 
-                <div className="space-y-2">
-                  <Label>Verification Code</Label>
-                  <VerificationCodeInput
-                    value={resetCode}
-                    onChange={setResetCode}
-                    length={6}
-                  />
+                <div className="text-center py-6">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Mail className="w-8 h-8 text-green-600" />
+                  </div>
+                  <h3 className="font-semibold text-ranch-charcoal mb-2">Check Your Email</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    We've sent you an email with a password reset link. Click the link in the email to set your new password.
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    💡 Check your spam folder if you don't see the email
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label>New Password</Label>
-                  <Input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="New password"
-                    required
-                  />
-                  {newPassword && <PasswordRequirements password={newPassword} />}
-                </div>
-
-                <div className="flex gap-3">
-                  <Button type="button" variant="outline" onClick={() => { setShowForgotPassword(false); setResetCodeSent(false); }} className="flex-1">
-                    Cancel
-                  </Button>
-                  <Button type="submit" className="flex-1 ranch-gradient text-white">
-                    Reset Password
-                  </Button>
-                </div>
-              </form>
+                <Button 
+                  onClick={() => { 
+                    setShowForgotPassword(false); 
+                    setResetCodeSent(false); 
+                    setResetEmail("");
+                  }} 
+                  className="w-full ranch-gradient text-white"
+                >
+                  Back to Login
+                </Button>
+              </div>
             )}
           </>
         ) : (

@@ -5,6 +5,7 @@ import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancelled from './pages/PaymentCancelled';
+import ResetPassword from './pages/ResetPassword';
 import Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "Profile": Profile,
     "PaymentSuccess": PaymentSuccess,
     "PaymentCancelled": PaymentCancelled,
+    "ResetPassword": ResetPassword,
 }
 
 export const pagesConfig = {
