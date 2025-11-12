@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
@@ -273,7 +272,29 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
       setResetCodeSent(true);
     } catch (err) {
       console.error('Password reset request error:', err);
-      setError("Failed to send reset email. Please check your email address and try again.");
+      
+      // Show specific error message from Base44
+      let errorMessage = "Failed to send reset email. Please check your email address and try again.";
+      
+      if (err?.data?.detail) {
+        if (typeof err.data.detail === 'string') {
+          errorMessage = err.data.detail;
+        } else if (Array.isArray(err.data.detail)) {
+          errorMessage = err.data.detail.map(e => e.msg || e.message).join('; ');
+        }
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      
+      // Check for specific known issues
+      const errorStr = String(errorMessage).toLowerCase();
+      if (errorStr.includes('user not found') || errorStr.includes('no user')) {
+        errorMessage = "No account found with this email address. Please check your email or sign up for a new account.";
+      } else if (errorStr.includes('email not verified')) {
+        errorMessage = "This email is not verified yet. Please complete the signup process first.";
+      }
+      
+      setError(errorMessage);
     }
 
     setIsSubmitting(false);
