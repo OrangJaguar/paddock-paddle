@@ -6,6 +6,7 @@ import Profile from './pages/Profile';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancelled from './pages/PaymentCancelled';
 import ResetPassword from './pages/ResetPassword';
+import BookingSuccess from './pages/BookingSuccess';
 import Layout from './Layout.jsx';
 
 
@@ -18,6 +19,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "PaymentCancelled": PaymentCancelled,
     "ResetPassword": ResetPassword,
+    "BookingSuccess": BookingSuccess,
 }
 
 export const pagesConfig = {

@@ -266,7 +266,18 @@ export default function PicleballBookingForm({ onClose }) {
         })
       ]);
 
-      setIsSuccess(true);
+      // Store booking details for success page
+      sessionStorage.setItem('bookingSuccess', JSON.stringify({
+        type: 'pickleball',
+        courts: courtsList,
+        date: formData.preferred_date,
+        time: formData.preferred_time,
+        duration: formData.duration.replace('_', ' '),
+        userName: user.full_name
+      }));
+
+      // Redirect to success page
+      window.location.href = '/booking-success';
     } catch (error) {
       console.error("Error submitting booking:", error);
     }
