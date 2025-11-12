@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { ContactMessage } from "@/entities/ContactMessage";
+import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,7 +35,59 @@ export default function Contact() {
     setIsSubmitting(true);
 
     try {
-      await ContactMessage.create(formData);
+      await base44.entities.ContactMessage.create(formData);
+      
+      // Send confirmation email to customer
+      const customerEmailBody = `
+        <div style="font-family: sans-serif; line-height: 1.6;">
+          <h2>Thank you for contacting us, ${formData.name}!</h2>
+          <p>We've received your message and will get back to you within 24 hours.</p>
+          <hr>
+          <h3>Your Message:</h3>
+          <p><strong>Subject:</strong> ${formData.subject}</p>
+          <p><strong>Message:</strong></p>
+          <p>${formData.message}</p>
+          <hr>
+          <p>If you need immediate assistance, please call us at (614) 123-4567.</p>
+          <p>Best,<br>The Paddock & Paddle Team</p>
+        </div>
+      `;
+
+      // Send notification email to business
+      const adminEmailBody = `
+        <div style="font-family: sans-serif; line-height: 1.6;">
+          <h2>New Contact Form Submission</h2>
+          <p>A new message has been submitted through the website contact form.</p>
+          <hr>
+          <h3>Contact Details:</h3>
+          <ul>
+            <li><strong>Name:</strong> ${formData.name}</li>
+            <li><strong>Email:</strong> ${formData.email}</li>
+            <li><strong>Inquiry Type:</strong> ${formData.inquiry_type}</li>
+            <li><strong>Subject:</strong> ${formData.subject}</li>
+          </ul>
+          <h3>Message:</h3>
+          <p>${formData.message}</p>
+          <hr>
+          <p>Please respond to this inquiry within 24 hours.</p>
+        </div>
+      `;
+
+      await Promise.all([
+        base44.integrations.Core.SendEmail({
+          to: formData.email,
+          subject: `We received your message - Paddock & Paddle`,
+          body: customerEmailBody,
+          from_name: "Paddock & Paddle"
+        }),
+        base44.integrations.Core.SendEmail({
+          to: "info@paddockandpaddle.com",
+          subject: `New Contact Form: ${formData.subject}`,
+          body: adminEmailBody,
+          from_name: "Paddock & Paddle Website"
+        })
+      ]);
+      
       setIsSuccess(true);
       setFormData({
         name: "",

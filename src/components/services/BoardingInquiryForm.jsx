@@ -1,7 +1,5 @@
-
 import React, { useState } from "react";
-import { BoardingInquiry } from "@/entities/BoardingInquiry";
-import { SendEmail } from "@/integrations/Core";
+import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,7 +35,7 @@ export default function BoardingInquiryForm({ onClose }) {
     setIsSubmitting(true);
     
     try {
-      await BoardingInquiry.create({
+      await base44.entities.BoardingInquiry.create({
         ...formData,
         horse_age: formData.horse_age ? parseInt(formData.horse_age) : undefined
       });
@@ -82,14 +80,14 @@ export default function BoardingInquiryForm({ onClose }) {
       `;
 
       await Promise.all([
-        SendEmail({
+        base44.integrations.Core.SendEmail({
           to: formData.email,
           subject: `Your Paddock & Paddle Equestrian Inquiry`,
           body: customerEmailBody,
           from_name: "Paddock & Paddle"
         }),
-        SendEmail({
-          to: "boarding@paddockandpaddle.com", // Your business email
+        base44.integrations.Core.SendEmail({
+          to: "info@paddockandpaddle.com",
           subject: `New Boarding Inquiry from ${formData.owner_name} for ${formData.horse_name}`,
           body: adminEmailBody,
           from_name: "Paddock & Paddle Website"
