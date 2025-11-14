@@ -202,15 +202,20 @@ export default function PicleballBookingForm({ onClose }) {
     setIsSubmitting(true);
     
     try {
-      // --- FIX: Fetch fresh user object to ensure email matches auth token ---
-      const freshUser = await base44.auth.me();
+      // 🔍 DEBUG: Fetch fresh user and log EVERYTHING
+      console.log('🔍 === BOOKING DEBUG START ===');
       
-      // Check if user (or email) is somehow missing
+      const freshUser = await base44.auth.me();
+      console.log('✅ Fresh user fetched:', freshUser);
+      console.log('📧 Fresh user email:', freshUser?.email);
+      console.log('👤 Fresh user id:', freshUser?.id);
+      console.log('📛 Fresh user name:', freshUser?.full_name);
+      
       if (!freshUser || !freshUser.email) {
+        console.error('❌ CRITICAL: No email found on user object!');
         throw new Error("User authentication failed. Please log out and log back in.");
       }
 
-      // Now, build the booking data with the FRESH user
       const bookingData = {
         ...formData,
         name: freshUser.full_name,
@@ -218,8 +223,15 @@ export default function PicleballBookingForm({ onClose }) {
         phone: freshUser.phone || ""
       };
       
+      console.log('📦 Booking data to submit:', JSON.stringify(bookingData, null, 2));
+      console.log('📧 Email in payload:', bookingData.email);
+      console.log('📧 Email type:', typeof bookingData.email);
+      console.log('📧 Email length:', bookingData.email?.length);
+      
       // 1. Create the booking
-      await base44.entities.PicleballBooking.create(bookingData);
+      console.log('🚀 Attempting to create booking...');
+      const createdBooking = await base44.entities.PicleballBooking.create(bookingData);
+      console.log('✅ Booking created successfully:', createdBooking);
       
       // 2. Prepare emails
       const courtsList = formData.selected_courts.sort((a, b) => a - b).map(c => `Court ${c}`).join(', ');
@@ -288,14 +300,22 @@ export default function PicleballBookingForm({ onClose }) {
         userName: freshUser.full_name
       }));
 
+      console.log('🔍 === BOOKING DEBUG END (SUCCESS) ===');
+      
       // 5. Redirect to success page
       window.location.href = '/booking-success';
     } catch (error) {
-      console.error("Error submitting booking:", error);
-      alert("Failed to submit booking. Please try again or contact support.");
+      console.error('❌ === BOOKING DEBUG END (FAILED) ===');
+      console.error('❌ Error submitting booking:', error);
+      console.error('❌ Error type:', error?.constructor?.name);
+      console.error('❌ Error message:', error?.message);
+      console.error('❌ Error response:', error?.response);
+      console.error('❌ Error data:', error?.data);
+      console.error('❌ Full error object:', JSON.stringify(error, null, 2));
+      
+      alert(`Failed to submit booking. Error: ${error?.message || 'Unknown error'}. Check browser console for details.`);
     }
     
-    // We only reach this on failure, so we can stop the spinner
     setIsSubmitting(false);
   };
 
