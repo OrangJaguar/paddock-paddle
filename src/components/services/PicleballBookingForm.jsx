@@ -261,18 +261,26 @@ export default function PicleballBookingForm({ onClose }) {
         </div>
       `;
       
-      // 3. Try to send emails (non-blocking - don't fail the booking if emails fail)
+      // 3. Send emails (both customer and admin)
       try {
-        await base44.integrations.Core.SendEmail({
-          to: freshUser.email,
-          subject: `Your Paddock & Paddle Pickleball Request!`,
-          body: customerEmailBody,
-          from_name: "Paddock & Paddle"
-        });
-        console.log('✅ Customer email sent');
+        await Promise.all([
+          base44.integrations.Core.SendEmail({
+            to: freshUser.email,
+            subject: `Your Paddock & Paddle Pickleball Request!`,
+            body: customerEmailBody,
+            from_name: "Paddock & Paddle"
+          }),
+          base44.integrations.Core.SendEmail({
+            to: "info@paddockandpaddle.com",
+            subject: `New Pickleball Booking Request from ${freshUser.full_name}`,
+            body: adminEmailBody,
+            from_name: "Paddock & Paddle Website"
+          })
+        ]);
+        console.log('✅ Both customer and admin emails sent successfully');
       } catch (emailError) {
-        console.warn('⚠️ Could not send customer email:', emailError.message);
-        // Don't throw - continue with booking success
+        console.warn('⚠️ Email sending issue:', emailError.message);
+        // Don't fail the booking if emails fail
       }
 
       // 4. Store booking details for success page
