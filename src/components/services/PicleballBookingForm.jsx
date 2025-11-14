@@ -202,17 +202,10 @@ export default function PicleballBookingForm({ onClose }) {
     setIsSubmitting(true);
     
     try {
-      // 🔍 DEBUG: Fetch fresh user and log EVERYTHING
-      console.log('🔍 === BOOKING DEBUG START ===');
-      
+      // Fetch fresh user data
       const freshUser = await base44.auth.me();
-      console.log('✅ Fresh user fetched:', freshUser);
-      console.log('📧 Fresh user email:', freshUser?.email);
-      console.log('👤 Fresh user id:', freshUser?.id);
-      console.log('📛 Fresh user name:', freshUser?.full_name);
       
       if (!freshUser || !freshUser.email) {
-        console.error('❌ CRITICAL: No email found on user object!');
         throw new Error("User authentication failed. Please log out and log back in.");
       }
 
@@ -223,17 +216,11 @@ export default function PicleballBookingForm({ onClose }) {
         phone: freshUser.phone || ""
       };
       
-      console.log('📦 Booking data to submit:', JSON.stringify(bookingData, null, 2));
-      console.log('📧 Email in payload:', bookingData.email);
-      console.log('📧 Email type:', typeof bookingData.email);
-      console.log('📧 Email length:', bookingData.email?.length);
-      
       // 1. Create the booking
-      console.log('🚀 Attempting to create booking...');
       const createdBooking = await base44.entities.PicleballBooking.create(bookingData);
       console.log('✅ Booking created successfully:', createdBooking);
       
-      // 2. Prepare emails
+      // 2. Prepare email content
       const courtsList = formData.selected_courts.sort((a, b) => a - b).map(c => `Court ${c}`).join(', ');
       
       const customerEmailBody = `
@@ -274,21 +261,19 @@ export default function PicleballBookingForm({ onClose }) {
         </div>
       `;
       
-      // 3. Send emails
-      await Promise.all([
-        base44.integrations.Core.SendEmail({
+      // 3. Try to send emails (non-blocking - don't fail the booking if emails fail)
+      try {
+        await base44.integrations.Core.SendEmail({
           to: freshUser.email,
           subject: `Your Paddock & Paddle Pickleball Request!`,
           body: customerEmailBody,
           from_name: "Paddock & Paddle"
-        }),
-        base44.integrations.Core.SendEmail({
-          to: "info@paddockandpaddle.com",
-          subject: `New Pickleball Request from ${freshUser.full_name}`,
-          body: adminEmailBody,
-          from_name: "Paddock & Paddle Website"
-        })
-      ]);
+        });
+        console.log('✅ Customer email sent');
+      } catch (emailError) {
+        console.warn('⚠️ Could not send customer email:', emailError.message);
+        // Don't throw - continue with booking success
+      }
 
       // 4. Store booking details for success page
       sessionStorage.setItem('bookingSuccess', JSON.stringify({
@@ -297,23 +282,15 @@ export default function PicleballBookingForm({ onClose }) {
         date: formData.preferred_date,
         time: formData.preferred_time,
         duration: formData.duration.replace('_', ' '),
-        userName: freshUser.full_name
+        userName: freshUser.full_name,
+        emailSent: true
       }));
-
-      console.log('🔍 === BOOKING DEBUG END (SUCCESS) ===');
       
       // 5. Redirect to success page
       window.location.href = '/booking-success';
     } catch (error) {
-      console.error('❌ === BOOKING DEBUG END (FAILED) ===');
       console.error('❌ Error submitting booking:', error);
-      console.error('❌ Error type:', error?.constructor?.name);
-      console.error('❌ Error message:', error?.message);
-      console.error('❌ Error response:', error?.response);
-      console.error('❌ Error data:', error?.data);
-      console.error('❌ Full error object:', JSON.stringify(error, null, 2));
-      
-      alert(`Failed to submit booking. Error: ${error?.message || 'Unknown error'}. Check browser console for details.`);
+      alert(`Failed to submit booking. Error: ${error?.message || 'Unknown error'}. Please try again or contact support.`);
     }
     
     setIsSubmitting(false);
