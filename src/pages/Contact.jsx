@@ -15,8 +15,8 @@ import {
   Facebook,
   Instagram,
   MessageSquare,
-  CheckCircle
-} from "lucide-react";
+  CheckCircle } from
+"lucide-react";
 import LoadingAnimation from "../components/ui/LoadingAnimation";
 
 export default function Contact() {
@@ -36,7 +36,7 @@ export default function Contact() {
 
     try {
       await base44.entities.ContactMessage.create(formData);
-      
+
       // Send confirmation email to customer
       const customerEmailBody = `
         <div style="font-family: sans-serif; line-height: 1.6;">
@@ -74,20 +74,20 @@ export default function Contact() {
       `;
 
       await Promise.all([
-        base44.integrations.Core.SendEmail({
-          to: formData.email,
-          subject: `We received your message - Paddock & Paddle`,
-          body: customerEmailBody,
-          from_name: "Paddock & Paddle"
-        }),
-        base44.integrations.Core.SendEmail({
-          to: "info@paddockandpaddle.com",
-          subject: `New Contact Form: ${formData.subject}`,
-          body: adminEmailBody,
-          from_name: "Paddock & Paddle Website"
-        })
-      ]);
-      
+      base44.integrations.Core.SendEmail({
+        to: formData.email,
+        subject: `We received your message - Paddock & Paddle`,
+        body: customerEmailBody,
+        from_name: "Paddock & Paddle"
+      }),
+      base44.integrations.Core.SendEmail({
+        to: "info@paddockandpaddle.com",
+        subject: `New Contact Form: ${formData.subject}`,
+        body: adminEmailBody,
+        from_name: "Paddock & Paddle Website"
+      })]
+      );
+
       setIsSuccess(true);
       setFormData({
         name: "",
@@ -104,7 +104,7 @@ export default function Contact() {
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }));
@@ -121,8 +121,8 @@ export default function Contact() {
             backgroundPosition: 'center center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'
-          }}
-        >
+          }}>
+
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         </div>
 
@@ -197,10 +197,10 @@ export default function Contact() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-ranch-charcoal mb-2">Email Us</h3>
-                        <p className="text-gray-600">
-                          General: info@paddockandpaddle.com<br />
-                          Boarding: boarding@paddockandpaddle.com<br />
-                          Events: events@paddockandpaddle.com
+                        <p className="text-gray-600">General: info@paddockandpaddle.com
+
+
+
                         </p>
                       </div>
                     </div>
@@ -232,20 +232,20 @@ export default function Contact() {
                 <div className="flex gap-4">
                   <a
                     href="#"
-                    className="w-12 h-12 bg-ranch-red bg-opacity-10 rounded-full flex items-center justify-center text-ranch-red hover:bg-ranch-red hover:text-white transition-colors duration-200"
-                  >
+                    className="w-12 h-12 bg-ranch-red bg-opacity-10 rounded-full flex items-center justify-center text-ranch-red hover:bg-ranch-red hover:text-white transition-colors duration-200">
+
                     <Instagram className="w-5 h-5" />
                   </a>
                   <a
                     href="#"
-                    className="w-12 h-12 bg-ranch-red bg-opacity-10 rounded-full flex items-center justify-center text-ranch-red hover:bg-ranch-red hover:text-white transition-colors duration-200"
-                  >
+                    className="w-12 h-12 bg-ranch-red bg-opacity-10 rounded-full flex items-center justify-center text-ranch-red hover:bg-ranch-red hover:text-white transition-colors duration-200">
+
                     <Facebook className="w-5 h-5" />
                   </a>
                   <a
                     href="#"
-                    className="w-12 h-12 bg-ranch-red bg-opacity-10 rounded-full flex items-center justify-center text-ranch-red hover:bg-ranch-red hover:text-white transition-colors duration-200"
-                  >
+                    className="w-12 h-12 bg-ranch-red bg-opacity-10 rounded-full flex items-center justify-center text-ranch-red hover:bg-ranch-red hover:text-white transition-colors duration-200">
+
                     <MessageSquare className="w-5 h-5" />
                   </a>
                 </div>
@@ -264,8 +264,8 @@ export default function Contact() {
                   </p>
                 </CardHeader>
                 <CardContent className="p-8">
-                  {isSuccess ? (
-                    <div className="text-center py-8">
+                  {isSuccess ?
+                  <div className="text-center py-8">
                       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <CheckCircle className="w-8 h-8 text-green-600" />
                       </div>
@@ -276,46 +276,46 @@ export default function Contact() {
                         Thank you for reaching out. We'll respond to your inquiry within 24 hours.
                       </p>
                       <Button
-                        onClick={() => setIsSuccess(false)}
-                        className="ranch-gradient text-white"
-                      >
+                      onClick={() => setIsSuccess(false)}
+                      className="ranch-gradient text-white">
+
                         Send Another Message
                       </Button>
-                    </div>
-                  ) : isSubmitting ? (
-                    <LoadingAnimation text="Sending your message..." />
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    </div> :
+                  isSubmitting ?
+                  <LoadingAnimation text="Sending your message..." /> :
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="name">Full Name *</Label>
                           <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) => handleInputChange('name', e.target.value)}
-                            required
-                            placeholder="Your full name"
-                          />
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          required
+                          placeholder="Your full name" />
+
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="email">Email Address *</Label>
                           <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => handleInputChange('email', e.target.value)}
-                            required
-                            placeholder="your@email.com"
-                          />
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          required
+                          placeholder="your@email.com" />
+
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="inquiry_type">Inquiry Type</Label>
                         <Select
-                          value={formData.inquiry_type}
-                          onValueChange={(value) => handleInputChange('inquiry_type', value)}
-                        >
+                        value={formData.inquiry_type}
+                        onValueChange={(value) => handleInputChange('inquiry_type', value)}>
+
                           <SelectTrigger>
                             <SelectValue placeholder="What can we help you with?" />
                           </SelectTrigger>
@@ -332,42 +332,42 @@ export default function Contact() {
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject *</Label>
                         <Input
-                          id="subject"
-                          value={formData.subject}
-                          onChange={(e) => handleInputChange('subject', e.target.value)}
-                          required
-                          placeholder="Brief description of your inquiry"
-                        />
+                        id="subject"
+                        value={formData.subject}
+                        onChange={(e) => handleInputChange('subject', e.target.value)}
+                        required
+                        placeholder="Brief description of your inquiry" />
+
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
                         <Textarea
-                          id="message"
-                          value={formData.message}
-                          onChange={(e) => handleInputChange('message', e.target.value)}
-                          required
-                          placeholder="Tell us more about how we can help you..."
-                          rows={6}
-                        />
+                        id="message"
+                        value={formData.message}
+                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        required
+                        placeholder="Tell us more about how we can help you..."
+                        rows={6} />
+
                       </div>
 
                       <Button
-                        type="submit"
-                        className="w-full ranch-gradient text-white text-lg py-3"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          "Sending Message..."
-                        ) : (
-                          <>
+                      type="submit"
+                      className="w-full ranch-gradient text-white text-lg py-3"
+                      disabled={isSubmitting}>
+
+                        {isSubmitting ?
+                      "Sending Message..." :
+
+                      <>
                             <Send className="w-5 h-5 mr-2" />
                             Send Message
                           </>
-                        )}
+                      }
                       </Button>
                     </form>
-                  )}
+                  }
                 </CardContent>
               </Card>
             </div>
@@ -399,8 +399,8 @@ export default function Contact() {
                 <a
                   href="https://www.google.com/maps/dir//8220+Dublin+Road+Dublin+OH+43017"
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
+
                   <Button className="mt-4 ranch-gradient text-white">
                     View on Google Maps
                   </Button>
@@ -436,6 +436,6 @@ export default function Contact() {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>);
+
 }
