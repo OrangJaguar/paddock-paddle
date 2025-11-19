@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Lock, Mail, User, Phone, AlertCircle, CreditCard, ArrowRight, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Lock, Mail, User, Phone, AlertCircle, CreditCard, ArrowRight, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2, Eye, EyeOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import LoadingAnimation from "../ui/LoadingAnimation";
 import VerificationCodeInput from "../ui/VerificationCodeInput";
@@ -60,6 +60,9 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
   const [newPassword, setNewPassword] = useState("");
   const [showMembershipInfo, setShowMembershipInfo] = useState(false);
   const [verificationCode, setVerificationCode] = useState(""); // State for signup email verification code
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // 🔍 DEBUG: Log Base44 Auth API on mount
   React.useEffect(() => {
@@ -525,13 +528,23 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
                   <div className="space-y-2">
                     <Label>Password</Label>
-                    <Input
-                      type="password"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      placeholder="••••••••"
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        value={loginData.password}
+                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                        placeholder="••••••••"
+                        required
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
                     <button
                       type="button"
                       onClick={() => setShowForgotPassword(true)}
@@ -593,25 +606,45 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
                     <div className="space-y-2">
                       <Label>Create Password *</Label>
-                      <Input
-                        type="password"
-                        value={signupData.password}
-                        onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                        placeholder="Create a strong password"
-                        required
-                      />
+                      <div className="relative">
+                        <Input
+                          type={showSignupPassword ? "text" : "password"}
+                          value={signupData.password}
+                          onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                          placeholder="Create a strong password"
+                          required
+                          className="pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSignupPassword(!showSignupPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                       {signupData.password && <PasswordRequirements password={signupData.password} />}
                     </div>
 
                     <div className="space-y-2">
                       <Label>Confirm Password *</Label>
-                      <Input
-                        type="password"
-                        value={signupData.confirmPassword}
-                        onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
-                        placeholder="Confirm password"
-                        required
-                      />
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? "text" : "password"}
+                          value={signupData.confirmPassword}
+                          onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
+                          placeholder="Confirm password"
+                          required
+                          className="pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
