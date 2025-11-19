@@ -108,24 +108,9 @@ export default function BookingSuccess() {
 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
                   <h3 className="font-semibold text-blue-900 mb-3">📋 What Happens Next?</h3>
-                  <ul className="space-y-2 text-sm text-blue-800">
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold mt-0.5">1.</span>
-                      <span>Our team will review your court reservation request</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold mt-0.5">2.</span>
-                      <span>We'll check availability for your selected courts, date, and time</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold mt-0.5">3.</span>
-                      <span>You'll receive a confirmation email within 24 hours with payment details</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="font-bold mt-0.5">4.</span>
-                      <span>Once payment is received, your booking will be confirmed!</span>
-                    </li>
-                  </ul>
+                  <p className="text-sm text-blue-800">
+                    Our team will review your court reservation request, and someone from our team will reach out at the earliest to confirm your booking.
+                  </p>
                 </div>
 
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">

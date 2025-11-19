@@ -123,7 +123,7 @@ export default function Layout({ children, currentPageName }) {
           "image": "https://paddockandpaddle.com/og-image.jpg",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "5678 Dublin Rd",
+            "streetAddress": "8220 Dublin Road",
             "addressLocality": "Dublin",
             "addressRegion": "OH",
             "postalCode": "43017",
@@ -155,7 +155,7 @@ export default function Layout({ children, currentPageName }) {
             "https://www.facebook.com/paddockandpaddle",
             "https://www.instagram.com/paddockandpaddle"
           ],
-          "hasMap": "https://maps.google.com/?q=5678+Dublin+Rd+Dublin+OH+43017",
+          "hasMap": "https://maps.google.com/?q=8220+Dublin+Road+Dublin+OH+43017",
           "amenityFeature": [
             {
               "@type": "LocationFeatureSpecification",
@@ -359,9 +359,9 @@ export default function Layout({ children, currentPageName }) {
                 Experience the perfect blend of tradition and modern sophistication.
               </p>
               <div className="flex items-center gap-2 text-gray-600">
-                <MapPin className="w-4 h-4" />
-                <address className="not-italic">5678 Dublin Rd, Dublin, OH 43017</address>
-              </div>
+                  <MapPin className="w-4 h-4" />
+                  <address className="not-italic">8220 Dublin Road, Dublin, OH 43017</address>
+                </div>
             </div>
             
             <div>

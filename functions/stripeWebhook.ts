@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
                   Questions? We're here to help!<br><br>
                   <strong>The Paddock & Paddle Team</strong><br>
                   <a href="mailto:info@paddockandpaddle.com" style="color: #C41E3A;">info@paddockandpaddle.com</a> | (614) 123-4567<br>
-                  5678 Dublin Rd, Dublin, OH 43017
+                  8220 Dublin Road, Dublin, OH 43017
                 </p>
               </div>
             `,
