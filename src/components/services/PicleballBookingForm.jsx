@@ -15,6 +15,7 @@ import { Calendar, Clock, X, User as UserIcon, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import LoadingAnimation from "../ui/LoadingAnimation";
 import AuthModal from "../auth/AuthModal";
+import { createPageUrl } from "@/utils";
 
 const CourtSelector = ({ selectedCourts, bookedCourts, onCourtToggle }) => {
   const courts = [
@@ -144,6 +145,14 @@ export default function PicleballBookingForm({ onClose }) {
       const isAuth = await base44.auth.isAuthenticated();
       if (isAuth) {
         const currentUser = await base44.auth.me();
+        
+        // Check if user has active membership
+        if (!currentUser.membership_status || currentUser.membership_status !== 'active') {
+          alert('Active membership required to book courts. Please complete your membership payment.');
+          onClose();
+          return;
+        }
+        
         setUser(currentUser);
       } else {
         setShowAuthModal(true);
@@ -162,13 +171,15 @@ export default function PicleballBookingForm({ onClose }) {
 
     setIsCheckingAvailability(true);
     try {
+      // Check for both pending and confirmed bookings to block courts
       const bookings = await base44.entities.PicleballBooking.filter({
         preferred_date: formData.preferred_date,
-        preferred_time: formData.preferred_time,
-        status: "confirmed"
+        preferred_time: formData.preferred_time
       });
 
-      const booked = bookings.flatMap(booking => booking.selected_courts || []);
+      // Filter to only include pending or confirmed bookings (exclude cancelled)
+      const activeBookings = bookings.filter(b => b.status === 'pending' || b.status === 'confirmed');
+      const booked = activeBookings.flatMap(booking => booking.selected_courts || []);
       setBookedCourts([...new Set(booked)]);
       
       setFormData(prev => ({
@@ -295,7 +306,7 @@ export default function PicleballBookingForm({ onClose }) {
       }));
       
       // 5. Redirect to success page
-      window.location.href = '/booking-success';
+      window.location.href = createPageUrl("BookingSuccess");
     } catch (error) {
       console.error('❌ Error submitting booking:', error);
       alert(`Failed to submit booking. Error: ${error?.message || 'Unknown error'}. Please try again or contact support.`);
