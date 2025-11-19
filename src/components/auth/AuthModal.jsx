@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import PasswordInput from "@/components/ui/PasswordInput";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -525,8 +526,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
                   <div className="space-y-2">
                     <Label>Password</Label>
-                    <Input
-                      type="password"
+                    <PasswordInput
                       value={loginData.password}
                       onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                       placeholder="••••••••"
@@ -593,8 +593,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
                     <div className="space-y-2">
                       <Label>Create Password *</Label>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         value={signupData.password}
                         onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                         placeholder="Create a strong password"
@@ -605,8 +604,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
                     <div className="space-y-2">
                       <Label>Confirm Password *</Label>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         value={signupData.confirmPassword}
                         onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                         placeholder="Confirm password"
@@ -626,8 +624,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
                           {showMembershipInfo ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                         </button>
                       </div>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         value={signupData.membershipPassword}
                         onChange={(e) => setSignupData({ ...signupData, membershipPassword: e.target.value })}
                         placeholder="Enter membership code"
