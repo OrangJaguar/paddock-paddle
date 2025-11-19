@@ -163,8 +163,8 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold text-ranch-charcoal mb-2">Visit Us</h3>
                         <p className="text-gray-600">
-                          5678 Dublin Rd<br />
-                          Dublin, OH 44017<br />
+                          8220 Dublin Road<br />
+                          Dublin, OH 43017<br />
                           United States
                         </p>
                       </div>
@@ -393,12 +393,18 @@ export default function Contact() {
                 <MapPin className="w-16 h-16 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Interactive Map</h3>
                 <p className="max-w-md">
-                  5678 Dublin Rd, Dublin, OH 44017<br />
+                  8220 Dublin Road, Dublin, OH 43017<br />
                   Get directions and explore our location
                 </p>
-                <Button className="mt-4 ranch-gradient text-white">
-                  View on Google Maps
-                </Button>
+                <a
+                  href="https://www.google.com/maps/dir//8220+Dublin+Road+Dublin+OH+43017"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button className="mt-4 ranch-gradient text-white">
+                    View on Google Maps
+                  </Button>
+                </a>
               </div>
             </div>
           </Card>
