@@ -370,8 +370,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     setIsSubmitting(true);
 
     try {
-      // ✅ CORRECT: Use Token-based password reset (not OTP)
-      await base44.auth.resetPasswordRequest(resetEmail);
+      // Get the current app URL to construct proper reset link
+      const currentOrigin = window.location.origin;
+      const resetUrl = `${currentOrigin}/ResetPassword`;
+      
+      // Use custom reset URL so it goes to the actual website
+      await base44.auth.resetPasswordRequest(resetEmail, resetUrl);
       setResetCodeSent(true);
     } catch (err) {
       console.error('Password reset request error:', err);

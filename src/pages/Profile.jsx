@@ -310,12 +310,17 @@ export default function Profile() {
                   <Check className="w-4 h-4" />
                   <span className="text-sm font-medium">Status</span>
                 </div>
-                <p className={`text-lg font-semibold capitalize ${
-                  user?.membership_status === 'active' ? 'text-green-600' : 
-                  user?.membership_status === 'expired' ? 'text-red-600' : 'text-yellow-600'
-                }`}>
-                  {user?.membership_status || 'Active'}
-                </p>
+                {user?.membership_status === 'active' ? (
+                  <p className="text-lg font-semibold text-green-600 flex items-center gap-2">
+                    <Check className="w-5 h-5" />
+                    Active
+                  </p>
+                ) : (
+                  <p className="text-lg font-semibold text-yellow-600 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    Pending Payment
+                  </p>
+                )}
               </div>
               <div>
                 <div className="flex items-center gap-2 text-gray-600 mb-2">
