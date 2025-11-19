@@ -165,6 +165,33 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     try {
       // FIXED: Use the correct Base44 login method
       await base44.auth.loginViaEmailPassword(loginData.email, loginData.password);
+      
+      // Check if user has pending membership status
+      const currentUser = await base44.auth.me();
+      if (currentUser.membership_status !== 'active') {
+        // User needs to complete payment
+        console.log('User has pending membership, redirecting to payment...');
+        
+        try {
+          const checkoutResponse = await base44.functions.invoke('createStripeCheckout', {
+            email: currentUser.email,
+            name: currentUser.full_name,
+            metadata: {
+              user_id: currentUser.id,
+              completing_payment: 'true'
+            }
+          });
+
+          if (checkoutResponse?.data?.url) {
+            window.location.href = checkoutResponse.data.url;
+            return; // Don't close modal, we're redirecting
+          }
+        } catch (paymentError) {
+          console.error('Error creating checkout:', paymentError);
+          setError("Your account requires payment. Please check your profile page to complete payment.");
+        }
+      }
+      
       onSuccess?.();
       onClose();
     } catch (err) {
