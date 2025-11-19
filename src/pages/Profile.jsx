@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { User, Mail, Phone, Calendar, Check, CreditCard, AlertTriangle } from "lucide-react";
+import { User, Mail, Phone, Calendar, Check, CreditCard, AlertTriangle, ExternalLink } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,6 +48,7 @@ export default function Profile() {
     auto_renew: true
   });
   const [successMessage, setSuccessMessage] = useState("");
+  const [isRedirectingToPayment, setIsRedirectingToPayment] = useState(false);
 
   useEffect(() => {
     loadUser();
@@ -88,6 +89,28 @@ export default function Profile() {
     }
 
     setIsSaving(false);
+  };
+
+  const handleCompletePayment = async () => {
+    setIsRedirectingToPayment(true);
+    try {
+      const response = await base44.functions.invoke('createStripeCheckout', {
+        email: user.email,
+        name: user.full_name,
+        metadata: {
+          user_id: user.id,
+          completing_payment: 'true'
+        }
+      });
+
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+      alert("Failed to redirect to payment. Please try again.");
+      setIsRedirectingToPayment(false);
+    }
   };
 
   const handleCancelAccount = async () => {
@@ -135,6 +158,41 @@ export default function Profile() {
           <h1 className="text-4xl font-bold text-ranch-charcoal mb-2">Account Settings</h1>
           <p className="text-gray-600">Manage your Paddock & Paddle membership profile</p>
         </div>
+
+        {/* Payment Required Alert */}
+        {user?.membership_status !== 'active' && (
+          <Card className="shadow-lg mb-8 border-2 border-yellow-400 bg-yellow-50">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <AlertTriangle className="w-8 h-8 text-yellow-600 flex-shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-yellow-900 mb-2">
+                    Complete Your Membership Payment
+                  </h3>
+                  <p className="text-yellow-800 mb-4">
+                    Your account is currently <strong>inactive</strong>. Complete your payment to unlock full access 
+                    to pickleball court bookings and all member benefits.
+                  </p>
+                  <Button 
+                    onClick={handleCompletePayment}
+                    disabled={isRedirectingToPayment}
+                    className="ranch-gradient text-white gap-2"
+                  >
+                    {isRedirectingToPayment ? (
+                      "Redirecting to Payment..."
+                    ) : (
+                      <>
+                        <CreditCard className="w-4 h-4" />
+                        Complete Payment Now
+                        <ExternalLink className="w-4 h-4" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Profile Icon Selection */}

@@ -8,7 +8,7 @@ import PaymentCancelled from './pages/PaymentCancelled';
 import ResetPassword from './pages/ResetPassword';
 import BookingSuccess from './pages/BookingSuccess';
 import DebugAuth from './pages/DebugAuth';
-import Layout from './Layout.jsx';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -27,5 +27,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Homepage",
     Pages: PAGES,
-    Layout: Layout,
+    Layout: __Layout,
 };
