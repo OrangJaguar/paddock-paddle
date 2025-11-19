@@ -175,7 +175,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
         try {
           const checkoutResponse = await base44.functions.invoke('createStripeCheckout', {
             email: currentUser.email,
-            name: currentUser.full_name,
+            customerName: currentUser.full_name,
             metadata: {
               user_id: currentUser.id,
               completing_payment: 'true'

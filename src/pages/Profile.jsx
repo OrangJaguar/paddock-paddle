@@ -96,7 +96,7 @@ export default function Profile() {
     try {
       const response = await base44.functions.invoke('createStripeCheckout', {
         email: user.email,
-        name: user.full_name,
+        customerName: user.full_name,
         metadata: {
           user_id: user.id,
           completing_payment: 'true'
