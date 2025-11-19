@@ -312,10 +312,9 @@ export default function Profile() {
                 </div>
                 <p className={`text-lg font-semibold capitalize ${
                   user?.membership_status === 'active' ? 'text-green-600' : 
-                  user?.membership_status === 'expired' ? 'text-red-600' : 
-                  user?.membership_status === 'pending' ? 'text-yellow-600' : 'text-gray-600'
+                  user?.membership_status === 'expired' ? 'text-red-600' : 'text-yellow-600'
                 }`}>
-                  {user?.membership_status || 'Pending'}
+                  {user?.membership_status || 'Active'}
                 </p>
               </div>
               <div>
