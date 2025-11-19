@@ -148,7 +148,7 @@ export default function PicleballBookingForm({ onClose }) {
         
         // Check if user has active membership
         if (!currentUser.membership_status || currentUser.membership_status !== 'active') {
-          alert('Active membership required to book courts. Please complete your membership payment.');
+          alert('Active membership required to book courts. Please go to Account Settings (profile icon in top right) to complete your membership payment.');
           onClose();
           return;
         }
