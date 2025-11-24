@@ -17,37 +17,37 @@ import LoadingAnimation from "../ui/LoadingAnimation";
 import AuthModal from "../auth/AuthModal";
 import { createPageUrl } from "@/utils";
 
-const CourtSelector = ({ selectedCourts, bookedCourts, onCourtToggle }) => {
-  const courts = [
-    { number: 1, type: "premium", name: "Court 1 - Premium" },
-    { number: 2, type: "standard", name: "Court 2 - Standard" },
-    { number: 3, type: "standard", name: "Court 3 - Standard" },
-    { number: 4, type: "premium", name: "Court 4 - Premium" },
-    { number: 5, type: "standard", name: "Court 5 - Standard" }
-  ];
+const CourtSelector = ({ selectedCourt, bookedCourts, onCourtSelect, disabled }) => {
+  const courts = [1, 2, 3, 4, 5];
 
   return (
     <div className="space-y-4">
-      <Label className="text-base font-semibold">Select Court(s) *</Label>
-      <p className="text-sm text-gray-600 mb-4">
-        Click on the courts you'd like to reserve. You can select multiple courts.
-        {bookedCourts.length > 0 && " Gray courts are already booked for this time slot."}
-      </p>
+      <Label className="text-base font-semibold">Select Court *</Label>
+      {disabled ? (
+        <p className="text-sm text-amber-600 mb-4">
+          Please select a date and time first to see court availability.
+        </p>
+      ) : (
+        <p className="text-sm text-gray-600 mb-4">
+          Select one court for your 1-hour session.
+          {bookedCourts.length > 0 && " Gray courts are already booked for this time slot."}
+        </p>
+      )}
       
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {courts.map((court) => {
-          const isSelected = selectedCourts.includes(court.number);
-          const isBooked = bookedCourts.includes(court.number);
-          const isPremium = court.type === "premium";
+        {courts.map((courtNumber) => {
+          const isSelected = selectedCourt === courtNumber;
+          const isBooked = bookedCourts.includes(courtNumber);
+          const isDisabled = disabled || isBooked;
           
           return (
             <button
-              key={court.number}
+              key={courtNumber}
               type="button"
-              onClick={() => !isBooked && onCourtToggle(court.number)}
-              disabled={isBooked}
+              onClick={() => !isDisabled && onCourtSelect(courtNumber)}
+              disabled={isDisabled}
               className={`relative aspect-[3/4] rounded-lg border-4 transition-all duration-200 ${
-                isBooked
+                isDisabled
                   ? 'border-gray-300 bg-gray-200 cursor-not-allowed opacity-60'
                   : isSelected 
                     ? 'border-ranch-red bg-ranch-red shadow-lg scale-105' 
@@ -56,36 +56,27 @@ const CourtSelector = ({ selectedCourts, bookedCourts, onCourtToggle }) => {
             >
               <div className="h-full p-3 flex flex-col items-center justify-center">
                 <div className={`w-full flex-1 rounded border-2 ${
-                  isBooked ? 'border-gray-400' : isSelected ? 'border-white' : 'border-gray-400'
+                  isDisabled ? 'border-gray-400' : isSelected ? 'border-white' : 'border-gray-400'
                 } relative`}>
                   <div className={`absolute top-1/2 left-0 right-0 h-0.5 ${
-                    isBooked ? 'bg-gray-400' : isSelected ? 'bg-white' : 'bg-gray-400'
+                    isDisabled ? 'bg-gray-400' : isSelected ? 'bg-white' : 'bg-gray-400'
                   }`}></div>
                   <div className={`absolute top-1/4 left-0 right-0 h-0.5 ${
-                    isBooked ? 'bg-gray-400 opacity-60' : isSelected ? 'bg-white opacity-60' : 'bg-gray-300'
+                    isDisabled ? 'bg-gray-400 opacity-60' : isSelected ? 'bg-white opacity-60' : 'bg-gray-300'
                   }`}></div>
                   <div className={`absolute bottom-1/4 left-0 right-0 h-0.5 ${
-                    isBooked ? 'bg-gray-400 opacity-60' : isSelected ? 'bg-white opacity-60' : 'bg-gray-300'
+                    isDisabled ? 'bg-gray-400 opacity-60' : isSelected ? 'bg-white opacity-60' : 'bg-gray-300'
                   }`}></div>
                 </div>
                 
                 <div className={`mt-2 text-center ${
-                  isBooked ? 'text-gray-500' : isSelected ? 'text-white' : 'text-gray-700'
+                  isDisabled ? 'text-gray-500' : isSelected ? 'text-white' : 'text-gray-700'
                 }`}>
-                  <div className="font-bold text-xl">Court {court.number}</div>
-                  <div className={`text-xs font-medium ${
-                    isBooked 
-                      ? 'text-gray-500'
-                      : isPremium 
-                        ? (isSelected ? 'text-yellow-200' : 'text-yellow-600') 
-                        : (isSelected ? 'text-white' : 'text-gray-500')
-                  }`}>
-                    {isPremium ? '★ Premium' : 'Standard'}
-                  </div>
+                  <div className="font-bold text-xl">Court {courtNumber}</div>
                 </div>
               </div>
               
-              {isBooked && (
+              {isBooked && !disabled && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-40 rounded-lg">
                   <div className="bg-white px-3 py-1 rounded-full">
                     <span className="text-xs font-bold text-gray-700">BOOKED</span>
@@ -93,7 +84,7 @@ const CourtSelector = ({ selectedCourts, bookedCourts, onCourtToggle }) => {
                 </div>
               )}
               
-              {isSelected && !isBooked && (
+              {isSelected && !isDisabled && (
                 <div className="absolute top-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center">
                   <div className="w-4 h-4 bg-ranch-red rounded-full flex items-center justify-center text-white text-xs font-bold">
                     ✓
@@ -105,10 +96,10 @@ const CourtSelector = ({ selectedCourts, bookedCourts, onCourtToggle }) => {
         })}
       </div>
       
-      {selectedCourts.length > 0 && (
+      {selectedCourt && (
         <div className="bg-ranch-cream p-4 rounded-lg">
           <p className="text-sm font-medium text-ranch-charcoal">
-            Selected: {selectedCourts.sort((a, b) => a - b).map(c => `Court ${c}`).join(', ')}
+            Selected: Court {selectedCourt} (1 hour session - $40)
           </p>
         </div>
       )}
@@ -123,8 +114,8 @@ export default function PicleballBookingForm({ onClose }) {
   const [formData, setFormData] = useState({
     preferred_date: "",
     preferred_time: "",
-    selected_courts: [],
-    duration: "2_hours",
+    selected_court: null,
+    duration: "1_hour",
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -182,10 +173,13 @@ export default function PicleballBookingForm({ onClose }) {
       const booked = activeBookings.flatMap(booking => booking.selected_courts || []);
       setBookedCourts([...new Set(booked)]);
       
-      setFormData(prev => ({
-        ...prev,
-        selected_courts: prev.selected_courts.filter(c => !booked.includes(c))
-      }));
+      // Clear selected court if it's now booked
+      if (formData.selected_court && booked.includes(formData.selected_court)) {
+        setFormData(prev => ({
+          ...prev,
+          selected_court: null
+        }));
+      }
     } catch (error) {
       console.error("Error checking court availability:", error);
       setBookedCourts([]);
@@ -193,20 +187,29 @@ export default function PicleballBookingForm({ onClose }) {
     setIsCheckingAvailability(false);
   };
 
-  const handleCourtToggle = (courtNumber) => {
+  const handleCourtSelect = (courtNumber) => {
     setFormData(prev => ({
       ...prev,
-      selected_courts: prev.selected_courts.includes(courtNumber)
-        ? prev.selected_courts.filter(c => c !== courtNumber)
-        : [...prev.selected_courts, courtNumber]
+      selected_court: courtNumber
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (formData.selected_courts.length === 0) {
-      alert("Please select at least one court");
+    // Validate all required fields
+    if (!formData.preferred_date) {
+      alert("Please select a date");
+      return;
+    }
+    
+    if (!formData.preferred_time) {
+      alert("Please select a time");
+      return;
+    }
+    
+    if (!formData.selected_court) {
+      alert("Please select a court");
       return;
     }
     
@@ -220,8 +223,27 @@ export default function PicleballBookingForm({ onClose }) {
         throw new Error("User authentication failed. Please log out and log back in.");
       }
 
+      // Double-check court is still available before submitting
+      const existingBookings = await base44.entities.PicleballBooking.filter({
+        preferred_date: formData.preferred_date,
+        preferred_time: formData.preferred_time
+      });
+      const activeBookings = existingBookings.filter(b => b.status === 'pending' || b.status === 'confirmed');
+      const alreadyBooked = activeBookings.flatMap(booking => booking.selected_courts || []);
+      
+      if (alreadyBooked.includes(formData.selected_court)) {
+        alert("Sorry, this court was just booked by someone else. Please select a different court.");
+        await checkAvailability();
+        setIsSubmitting(false);
+        return;
+      }
+
       const bookingData = {
-        ...formData,
+        preferred_date: formData.preferred_date,
+        preferred_time: formData.preferred_time,
+        selected_courts: [formData.selected_court],
+        duration: "1_hour",
+        message: formData.message,
         name: freshUser.full_name,
         email: freshUser.email,
         phone: freshUser.phone || ""
@@ -232,7 +254,7 @@ export default function PicleballBookingForm({ onClose }) {
       console.log('✅ Booking created successfully:', createdBooking);
       
       // 2. Prepare email content
-      const courtsList = formData.selected_courts.sort((a, b) => a - b).map(c => `Court ${c}`).join(', ');
+      const courtsList = `Court ${formData.selected_court}`;
       
       const customerEmailBody = `
         <div style="font-family: sans-serif; line-height: 1.6;">
@@ -242,10 +264,11 @@ export default function PicleballBookingForm({ onClose }) {
           <hr>
           <h3>Your Request Details:</h3>
           <ul>
-            <li><strong>Courts:</strong> ${courtsList}</li>
+            <li><strong>Court:</strong> ${courtsList}</li>
             <li><strong>Date:</strong> ${formData.preferred_date}</li>
             <li><strong>Time:</strong> ${formData.preferred_time}</li>
-            <li><strong>Duration:</strong> ${formData.duration.replace('_', ' ')}</li>
+            <li><strong>Duration:</strong> 1 hour</li>
+            <li><strong>Cost:</strong> $40</li>
           </ul>
           <p>We look forward to seeing you on the court!</p>
           <p>Best,<br>The Paddock & Paddle Team</p>
@@ -262,10 +285,11 @@ export default function PicleballBookingForm({ onClose }) {
             <li><strong>Name:</strong> ${freshUser.full_name}</li>
             <li><strong>Email:</strong> ${freshUser.email}</li>
             <li><strong>Phone:</strong> ${freshUser.phone || 'Not provided'}</li>
-            <li><strong>Selected Courts:</strong> ${courtsList}</li>
+            <li><strong>Court:</strong> ${courtsList}</li>
             <li><strong>Date:</strong> ${formData.preferred_date}</li>
             <li><strong>Time:</strong> ${formData.preferred_time}</li>
-            <li><strong>Duration:</strong> ${formData.duration.replace('_', ' ')}</li>
+            <li><strong>Duration:</strong> 1 hour</li>
+            <li><strong>Cost:</strong> $40</li>
             <li><strong>Message:</strong> ${formData.message || 'None'}</li>
           </ul>
           <p>Please review and contact the customer to confirm.</p>
@@ -300,7 +324,7 @@ export default function PicleballBookingForm({ onClose }) {
         courts: courtsList,
         date: formData.preferred_date,
         time: formData.preferred_time,
-        duration: formData.duration.replace('_', ' '),
+        duration: '1 hour',
         userName: freshUser.full_name,
         emailSent: true
       }));
@@ -468,28 +492,11 @@ export default function PicleballBookingForm({ onClose }) {
               )}
 
               <CourtSelector 
-                selectedCourts={formData.selected_courts}
+                selectedCourt={formData.selected_court}
                 bookedCourts={bookedCourts}
-                onCourtToggle={handleCourtToggle}
+                onCourtSelect={handleCourtSelect}
+                disabled={!formData.preferred_date || !formData.preferred_time}
               />
-
-              <div className="space-y-2">
-                <Label htmlFor="duration">Duration</Label>
-                <Select
-                  value={formData.duration}
-                  onValueChange={(value) => handleInputChange('duration', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select duration" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1_hour">1 Hour</SelectItem>
-                    <SelectItem value="2_hours">2 Hours</SelectItem>
-                    <SelectItem value="half_day">Half Day (4 hours)</SelectItem>
-                    <SelectItem value="full_day">Full Day (8 hours)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="space-y-2">
                 <Label htmlFor="message">Special Requests or Notes</Label>
@@ -506,8 +513,8 @@ export default function PicleballBookingForm({ onClose }) {
                 <h4 className="font-semibold text-ranch-charcoal mb-2">Booking Information</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• Courts are available daily from 6:00 AM to 10:00 PM</li>
+                  <li>• Each court booking is for 1 hour at $40</li>
                   <li>• We'll contact you within 24 hours to confirm availability</li>
-                  <li>• Payment is due upon confirmation of your booking</li>
                   <li>• Equipment rentals available on-site</li>
                 </ul>
               </div>
@@ -525,9 +532,9 @@ export default function PicleballBookingForm({ onClose }) {
                 <Button
                   type="submit"
                   className="flex-1 ranch-gradient text-white"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !formData.preferred_date || !formData.preferred_time || !formData.selected_court}
                 >
-                  {isSubmitting ? "Submitting..." : "Request Booking"}
+                  {isSubmitting ? "Submitting..." : "Request Booking ($40)"}
                 </Button>
               </div>
             </form>
