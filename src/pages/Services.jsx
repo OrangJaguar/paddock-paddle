@@ -218,13 +218,6 @@ export default function Services() {
                   </div>
                   <div className="flex justify-between items-center p-3 bg-white rounded-lg">
                     <div>
-                      <span className="font-semibold">Double Open Play</span>
-                      <span className="text-gray-500 ml-2">(2 players)</span>
-                    </div>
-                    <span className="font-bold text-ranch-red">$30/hour</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <div>
                       <span className="font-semibold">Single Open Play</span>
                       <span className="text-gray-500 ml-2">(1 player)</span>
                     </div>

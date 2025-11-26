@@ -18,7 +18,6 @@ import { createPageUrl } from "@/utils";
 
 const BOOKING_OPTIONS = [
   { spots: 4, type: 'full_court', label: 'Full Court (4 players)', price: 40, description: 'Book the entire court for your group' },
-  { spots: 2, type: 'double_open', label: 'Double Open Play (2 players)', price: 30, description: 'Book 2 spots, share court with others' },
   { spots: 1, type: 'single_open', label: 'Single Open Play (1 player)', price: 15, description: 'Book 1 spot, join other players' },
 ];
 
