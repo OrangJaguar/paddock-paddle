@@ -4,12 +4,14 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
   apiVersion: '2023-10-16',
 });
 
-// LIVE MODE Price ID (already correct)
-const MEMBERSHIP_PRICE_ID = 'price_1SNgQEFi0RuJvUIcEGuImKdd';
+// Price IDs
+const MONTHLY_MEMBERSHIP_PRICE_ID = 'price_1SXq04Fi0RuJvUIcy6v637WM'; // $25/month
+const COURT_BOOKING_PRICE_ID = 'price_1SXq2HFi0RuJvUIciUVjP6JZ'; // $40 one-time
 
 Deno.serve(async (req) => {
   try {
-    const { email, customerName, metadata } = await req.json();
+    const { email, customerName, metadata, type } = await req.json();
+    // type: 'membership' (default) or 'court_booking'
 
     console.log('Received checkout request:', { email, customerName });
 
@@ -56,21 +58,30 @@ Deno.serve(async (req) => {
     }
 
     console.log('Using origin:', origin);
-    console.log('Creating checkout session with price:', MEMBERSHIP_PRICE_ID);
+    
+    const isCourtBooking = type === 'court_booking';
+    const priceId = isCourtBooking ? COURT_BOOKING_PRICE_ID : MONTHLY_MEMBERSHIP_PRICE_ID;
+    const mode = isCourtBooking ? 'payment' : 'subscription';
+    
+    console.log('Creating checkout session with price:', priceId, 'mode:', mode);
 
-    // Create checkout session - FIXED REDIRECT URLS
+    // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customer.id,
       payment_method_types: ['card'],
       line_items: [
         {
-          price: MEMBERSHIP_PRICE_ID,
+          price: priceId,
           quantity: 1,
         },
       ],
-      mode: 'subscription',
-      success_url: `${origin}/PaymentSuccess?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/PaymentCancelled`,
+      mode: mode,
+      success_url: isCourtBooking 
+        ? `${origin}/BookingSuccess?payment=success&session_id={CHECKOUT_SESSION_ID}`
+        : `${origin}/PaymentSuccess?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: isCourtBooking
+        ? `${origin}/Services?payment=cancelled`
+        : `${origin}/PaymentCancelled`,
       metadata: metadata || {},
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
