@@ -11,13 +11,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, Clock, X, User as UserIcon, AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Calendar, X, User as UserIcon, Users } from "lucide-react";
 import LoadingAnimation from "../ui/LoadingAnimation";
 import AuthModal from "../auth/AuthModal";
 import { createPageUrl } from "@/utils";
 
-const CourtSelector = ({ selectedCourt, bookedCourts, onCourtSelect, disabled }) => {
+const BOOKING_OPTIONS = [
+  { spots: 4, type: 'full_court', label: 'Full Court (4 players)', price: 40, description: 'Book the entire court for your group' },
+  { spots: 2, type: 'double_open', label: 'Double Open Play (2 players)', price: 30, description: 'Book 2 spots, share court with others' },
+  { spots: 1, type: 'single_open', label: 'Single Open Play (1 player)', price: 15, description: 'Book 1 spot, join other players' },
+];
+
+const CourtSelector = ({ selectedCourt, courtAvailability, onCourtSelect, disabled, spotsNeeded }) => {
   const courts = [1, 2, 3, 4, 5];
 
   return (
@@ -29,16 +34,17 @@ const CourtSelector = ({ selectedCourt, bookedCourts, onCourtSelect, disabled })
         </p>
       ) : (
         <p className="text-sm text-gray-600 mb-4">
-          Select one court for your 1-hour session.
-          {bookedCourts.length > 0 && " Gray courts are already booked for this time slot."}
+          Each court has 4 spots. Select a court with {spotsNeeded} available spot{spotsNeeded > 1 ? 's' : ''}.
         </p>
       )}
       
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         {courts.map((courtNumber) => {
+          const availability = courtAvailability[courtNumber] || { bookedSpots: 0, availableSpots: 4 };
           const isSelected = selectedCourt === courtNumber;
-          const isBooked = bookedCourts.includes(courtNumber);
-          const isDisabled = disabled || isBooked;
+          const hasEnoughSpots = availability.availableSpots >= spotsNeeded;
+          const isFullyBooked = availability.availableSpots === 0;
+          const isDisabled = disabled || !hasEnoughSpots;
           
           return (
             <button
@@ -46,63 +52,58 @@ const CourtSelector = ({ selectedCourt, bookedCourts, onCourtSelect, disabled })
               type="button"
               onClick={() => !isDisabled && onCourtSelect(courtNumber)}
               disabled={isDisabled}
-              className={`relative aspect-[3/4] rounded-lg border-4 transition-all duration-200 ${
+              className={`relative rounded-lg border-4 transition-all duration-200 p-4 ${
                 isDisabled
-                  ? 'border-gray-300 bg-gray-200 cursor-not-allowed opacity-60'
+                  ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-60'
                   : isSelected 
                     ? 'border-ranch-red bg-ranch-red shadow-lg scale-105' 
                     : 'border-gray-300 bg-white hover:border-ranch-red hover:shadow-md'
               }`}
             >
-              <div className="h-full p-3 flex flex-col items-center justify-center">
-                <div className={`w-full flex-1 rounded border-2 ${
-                  isDisabled ? 'border-gray-400' : isSelected ? 'border-white' : 'border-gray-400'
-                } relative`}>
-                  <div className={`absolute top-1/2 left-0 right-0 h-0.5 ${
-                    isDisabled ? 'bg-gray-400' : isSelected ? 'bg-white' : 'bg-gray-400'
-                  }`}></div>
-                  <div className={`absolute top-1/4 left-0 right-0 h-0.5 ${
-                    isDisabled ? 'bg-gray-400 opacity-60' : isSelected ? 'bg-white opacity-60' : 'bg-gray-300'
-                  }`}></div>
-                  <div className={`absolute bottom-1/4 left-0 right-0 h-0.5 ${
-                    isDisabled ? 'bg-gray-400 opacity-60' : isSelected ? 'bg-white opacity-60' : 'bg-gray-300'
-                  }`}></div>
+              <div className="text-center">
+                <div className={`font-bold text-lg mb-2 ${isSelected ? 'text-white' : 'text-gray-700'}`}>
+                  Court {courtNumber}
                 </div>
                 
-                <div className={`mt-2 text-center ${
-                  isDisabled ? 'text-gray-500' : isSelected ? 'text-white' : 'text-gray-700'
-                }`}>
-                  <div className="font-bold text-xl">Court {courtNumber}</div>
+                {/* 4-spot grid visualization */}
+                <div className="grid grid-cols-2 gap-1 mb-2">
+                  {[1, 2, 3, 4].map((spot) => {
+                    const isSpotBooked = spot <= availability.bookedSpots;
+                    return (
+                      <div
+                        key={spot}
+                        className={`w-6 h-6 mx-auto rounded-full border-2 flex items-center justify-center text-xs font-bold ${
+                          isSpotBooked
+                            ? 'bg-gray-400 border-gray-500 text-white'
+                            : isSelected
+                              ? 'bg-white border-white text-ranch-red'
+                              : 'bg-green-100 border-green-400 text-green-700'
+                        }`}
+                      >
+                        {isSpotBooked ? '✗' : spot}
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                <div className={`text-xs ${isSelected ? 'text-white' : 'text-gray-600'}`}>
+                  {isFullyBooked ? (
+                    <span className="text-red-500 font-semibold">FULL</span>
+                  ) : (
+                    <span>{availability.availableSpots} spot{availability.availableSpots !== 1 ? 's' : ''} open</span>
+                  )}
                 </div>
               </div>
               
-              {isBooked && !disabled && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-40 rounded-lg">
-                  <div className="bg-white px-3 py-1 rounded-full">
-                    <span className="text-xs font-bold text-gray-700">BOOKED</span>
-                  </div>
-                </div>
-              )}
-              
               {isSelected && !isDisabled && (
-                <div className="absolute top-2 right-2 w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                  <div className="w-4 h-4 bg-ranch-red rounded-full flex items-center justify-center text-white text-xs font-bold">
-                    ✓
-                  </div>
+                <div className="absolute top-2 right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-ranch-red text-xs font-bold">✓</span>
                 </div>
               )}
             </button>
           );
         })}
       </div>
-      
-      {selectedCourt && (
-        <div className="bg-ranch-cream p-4 rounded-lg">
-          <p className="text-sm font-medium text-ranch-charcoal">
-            Selected: Court {selectedCourt} (1 hour session - $40)
-          </p>
-        </div>
-      )}
     </div>
   );
 };
@@ -115,13 +116,15 @@ export default function PicleballBookingForm({ onClose }) {
     preferred_date: "",
     preferred_time: "",
     selected_court: null,
-    duration: "1_hour",
+    spots_needed: 4,
+    booking_type: "full_court",
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [bookedCourts, setBookedCourts] = useState([]);
+  const [courtAvailability, setCourtAvailability] = useState({});
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+
+  const selectedOption = BOOKING_OPTIONS.find(opt => opt.spots === formData.spots_needed);
 
   useEffect(() => {
     checkAuth();
@@ -137,9 +140,8 @@ export default function PicleballBookingForm({ onClose }) {
       if (isAuth) {
         const currentUser = await base44.auth.me();
         
-        // Check if user has active membership
         if (!currentUser.membership_status || currentUser.membership_status !== 'active') {
-          alert('Active membership required to book courts. Please go to Account Settings (profile icon in top right) to complete your membership payment.');
+          alert('Active membership required to book courts. Please go to Account Settings to complete your membership payment.');
           onClose();
           return;
         }
@@ -156,83 +158,85 @@ export default function PicleballBookingForm({ onClose }) {
 
   const checkAvailability = async () => {
     if (!formData.preferred_date || !formData.preferred_time) {
-      setBookedCourts([]);
+      setCourtAvailability({});
       return;
     }
 
     setIsCheckingAvailability(true);
     try {
-      // Check for both pending and confirmed bookings to block courts
       const bookings = await base44.entities.PicleballBooking.filter({
         preferred_date: formData.preferred_date,
         preferred_time: formData.preferred_time
       });
 
-      // Filter to only include pending or confirmed bookings (exclude cancelled)
       const activeBookings = bookings.filter(b => b.status === 'pending' || b.status === 'confirmed');
-      const booked = activeBookings.flatMap(booking => booking.selected_courts || []);
-      setBookedCourts([...new Set(booked)]);
       
-      // Clear selected court if it's now booked
-      if (formData.selected_court && booked.includes(formData.selected_court)) {
-        setFormData(prev => ({
-          ...prev,
-          selected_court: null
-        }));
+      // Calculate spots used per court
+      const availability = {};
+      for (let court = 1; court <= 5; court++) {
+        const courtBookings = activeBookings.filter(b => b.selected_court === court);
+        const bookedSpots = courtBookings.reduce((sum, b) => sum + (b.spots_booked || 4), 0);
+        availability[court] = {
+          bookedSpots: Math.min(bookedSpots, 4),
+          availableSpots: Math.max(4 - bookedSpots, 0)
+        };
+      }
+      
+      setCourtAvailability(availability);
+      
+      // Clear selected court if it no longer has enough spots
+      if (formData.selected_court) {
+        const courtAvail = availability[formData.selected_court];
+        if (courtAvail && courtAvail.availableSpots < formData.spots_needed) {
+          setFormData(prev => ({ ...prev, selected_court: null }));
+        }
       }
     } catch (error) {
       console.error("Error checking court availability:", error);
-      setBookedCourts([]);
+      setCourtAvailability({});
     }
     setIsCheckingAvailability(false);
   };
 
-  const handleCourtSelect = (courtNumber) => {
+  const handleSpotsChange = (spots) => {
+    const option = BOOKING_OPTIONS.find(opt => opt.spots === spots);
     setFormData(prev => ({
       ...prev,
-      selected_court: courtNumber
+      spots_needed: spots,
+      booking_type: option?.type || 'full_court',
+      selected_court: null // Reset court selection when spots change
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate all required fields
-    if (!formData.preferred_date) {
-      alert("Please select a date");
-      return;
-    }
-    
-    if (!formData.preferred_time) {
-      alert("Please select a time");
-      return;
-    }
-    
-    if (!formData.selected_court) {
-      alert("Please select a court");
+    if (!formData.preferred_date || !formData.preferred_time || !formData.selected_court) {
+      alert("Please fill in all required fields");
       return;
     }
     
     setIsSubmitting(true);
     
     try {
-      // Fetch fresh user data
       const freshUser = await base44.auth.me();
       
       if (!freshUser || !freshUser.email) {
         throw new Error("User authentication failed. Please log out and log back in.");
       }
 
-      // Double-check court is still available before submitting
+      // Re-check availability
       const existingBookings = await base44.entities.PicleballBooking.filter({
         preferred_date: formData.preferred_date,
-        preferred_time: formData.preferred_time
+        preferred_time: formData.preferred_time,
+        selected_court: formData.selected_court
       });
       const activeBookings = existingBookings.filter(b => b.status === 'pending' || b.status === 'confirmed');
-      const alreadyBooked = activeBookings.flatMap(booking => booking.selected_courts || []);
+      const bookedSpots = activeBookings.reduce((sum, b) => sum + (b.spots_booked || 4), 0);
+      const availableSpots = 4 - bookedSpots;
       
-      if (alreadyBooked.includes(formData.selected_court)) {
-        alert("Sorry, this court was just booked by someone else. Please select a different court.");
+      if (availableSpots < formData.spots_needed) {
+        alert("Sorry, not enough spots available on this court. Please select a different court.");
         await checkAvailability();
         setIsSubmitting(false);
         return;
@@ -241,19 +245,21 @@ export default function PicleballBookingForm({ onClose }) {
       const bookingData = {
         preferred_date: formData.preferred_date,
         preferred_time: formData.preferred_time,
-        selected_courts: [formData.selected_court],
-        duration: "1_hour",
+        selected_court: formData.selected_court,
+        spots_booked: formData.spots_needed,
+        booking_type: formData.booking_type,
+        price_paid: selectedOption.price,
         message: formData.message,
         name: freshUser.full_name,
         email: freshUser.email,
         phone: freshUser.phone || ""
       };
       
-      // 1. Create the booking
+      // Create the booking
       const createdBooking = await base44.entities.PicleballBooking.create(bookingData);
-      console.log('✅ Booking created successfully:', createdBooking);
+      console.log('✅ Booking created:', createdBooking);
       
-      // 2. Add to Google Calendar
+      // Add to Google Calendar
       try {
         await base44.functions.invoke('addToGoogleCalendar', {
           booking: {
@@ -264,26 +270,26 @@ export default function PicleballBookingForm({ onClose }) {
         console.log('✅ Added to Google Calendar');
       } catch (calendarError) {
         console.warn('⚠️ Google Calendar sync issue:', calendarError.message);
-        // Don't fail the booking if calendar sync fails
       }
       
-      // 3. Prepare email content
-      const courtsList = `Court ${formData.selected_court}`;
-      
+      // Send emails
+      const bookingTypeLabel = selectedOption.label;
       const customerEmailBody = `
         <div style="font-family: sans-serif; line-height: 1.6;">
-          <h2>Thank you for your request, ${freshUser.full_name}!</h2>
-          <p>We've received your pickleball court reservation request for Paddock & Paddle. Please note, this is not a final confirmation.</p>
-          <p>Our team will review your request and contact you within 24 hours to confirm availability and provide payment details.</p>
+          <h2>Thank you for your booking, ${freshUser.full_name}!</h2>
+          <p>We've received your pickleball court reservation at Paddock & Paddle.</p>
           <hr>
-          <h3>Your Request Details:</h3>
+          <h3>Your Booking Details:</h3>
           <ul>
-            <li><strong>Court:</strong> ${courtsList}</li>
+            <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
+            <li><strong>Court:</strong> Court ${formData.selected_court}</li>
+            <li><strong>Spots Reserved:</strong> ${formData.spots_needed} of 4</li>
             <li><strong>Date:</strong> ${formData.preferred_date}</li>
             <li><strong>Time:</strong> ${formData.preferred_time}</li>
             <li><strong>Duration:</strong> 1 hour</li>
-            <li><strong>Cost:</strong> $40</li>
+            <li><strong>Price:</strong> $${selectedOption.price}</li>
           </ul>
+          ${formData.spots_needed < 4 ? '<p><em>Note: You are sharing this court with other open-play participants.</em></p>' : ''}
           <p>We look forward to seeing you on the court!</p>
           <p>Best,<br>The Paddock & Paddle Team</p>
         </div>
@@ -291,73 +297,62 @@ export default function PicleballBookingForm({ onClose }) {
 
       const adminEmailBody = `
         <div style="font-family: sans-serif; line-height: 1.6;">
-          <h2>New Pickleball Booking Request</h2>
-          <p>A new reservation request has been submitted by ${freshUser.full_name}.</p>
+          <h2>New Pickleball Booking</h2>
           <hr>
-          <h3>Booking Details:</h3>
           <ul>
             <li><strong>Name:</strong> ${freshUser.full_name}</li>
             <li><strong>Email:</strong> ${freshUser.email}</li>
             <li><strong>Phone:</strong> ${freshUser.phone || 'Not provided'}</li>
-            <li><strong>Court:</strong> ${courtsList}</li>
+            <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
+            <li><strong>Court:</strong> Court ${formData.selected_court}</li>
+            <li><strong>Spots:</strong> ${formData.spots_needed} of 4</li>
             <li><strong>Date:</strong> ${formData.preferred_date}</li>
             <li><strong>Time:</strong> ${formData.preferred_time}</li>
-            <li><strong>Duration:</strong> 1 hour</li>
-            <li><strong>Cost:</strong> $40</li>
+            <li><strong>Price:</strong> $${selectedOption.price}</li>
             <li><strong>Message:</strong> ${formData.message || 'None'}</li>
           </ul>
-          <p>Please review and contact the customer to confirm.</p>
         </div>
       `;
       
-      // 4. Send emails (both customer and admin)
       try {
         await Promise.all([
           base44.integrations.Core.SendEmail({
             to: freshUser.email,
-            subject: `Your Paddock & Paddle Pickleball Request!`,
+            subject: `Your Paddock & Paddle Booking Confirmed!`,
             body: customerEmailBody,
             from_name: "Paddock & Paddle"
           }),
           base44.integrations.Core.SendEmail({
             to: "info@paddockandpaddle.com",
-            subject: `New Pickleball Booking Request from ${freshUser.full_name}`,
+            subject: `New Booking: ${bookingTypeLabel} - ${freshUser.full_name}`,
             body: adminEmailBody,
             from_name: "Paddock & Paddle Website"
           })
         ]);
-        console.log('✅ Both customer and admin emails sent successfully');
       } catch (emailError) {
-        console.warn('⚠️ Email sending issue:', emailError.message);
-        // Don't fail the booking if emails fail
+        console.warn('⚠️ Email issue:', emailError.message);
       }
 
-      // 5. Store booking details for success page
+      // Store for success page
       sessionStorage.setItem('bookingSuccess', JSON.stringify({
         type: 'pickleball',
-        courts: courtsList,
+        bookingType: formData.booking_type,
+        bookingTypeLabel: bookingTypeLabel,
+        court: formData.selected_court,
+        spots: formData.spots_needed,
         date: formData.preferred_date,
         time: formData.preferred_time,
-        duration: '1 hour',
-        userName: freshUser.full_name,
-        emailSent: true
+        price: selectedOption.price,
+        userName: freshUser.full_name
       }));
       
-      // 6. Redirect to success page
       window.location.href = createPageUrl("BookingSuccess");
     } catch (error) {
-      console.error('❌ Error submitting booking:', error);
-      alert(`Failed to submit booking. Error: ${error?.message || 'Unknown error'}. Please try again or contact support.`);
+      console.error('❌ Error:', error);
+      alert(`Failed to submit booking: ${error?.message || 'Unknown error'}`);
     }
     
     setIsSubmitting(false);
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
   };
 
   const handleAuthSuccess = async () => {
@@ -422,35 +417,11 @@ export default function PicleballBookingForm({ onClose }) {
     );
   }
 
-  if (isSuccess) {
-    return (
-      <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center text-ranch-red">Booking Request Submitted!</DialogTitle>
-          </DialogHeader>
-          <div className="text-center py-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Calendar className="w-8 h-8 text-green-600" />
-            </div>
-            <p className="text-gray-600 mb-6">
-              Thank you for your pickleball court reservation request! We'll contact you within 24 hours 
-              to confirm your booking and provide payment instructions.
-            </p>
-            <Button onClick={onClose} className="ranch-gradient text-white">
-              Close
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
         {isSubmitting ? (
-          <LoadingAnimation text="Submitting your booking request..." />
+          <LoadingAnimation text="Submitting your booking..." />
         ) : (
           <>
             <DialogHeader>
@@ -468,6 +439,33 @@ export default function PicleballBookingForm({ onClose }) {
             </DialogHeader>
             
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Booking Type Selection */}
+              <div className="space-y-3">
+                <Label className="text-base font-semibold flex items-center gap-2">
+                  <Users className="w-5 h-5 text-ranch-red" />
+                  How many players? *
+                </Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {BOOKING_OPTIONS.map((option) => (
+                    <button
+                      key={option.type}
+                      type="button"
+                      onClick={() => handleSpotsChange(option.spots)}
+                      className={`p-4 rounded-lg border-2 text-left transition-all ${
+                        formData.spots_needed === option.spots
+                          ? 'border-ranch-red bg-red-50'
+                          : 'border-gray-200 hover:border-ranch-red'
+                      }`}
+                    >
+                      <div className="font-semibold text-ranch-charcoal">{option.label}</div>
+                      <div className="text-2xl font-bold text-ranch-red">${option.price}</div>
+                      <div className="text-xs text-gray-500 mt-1">{option.description}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Date and Time */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="preferred_date">Preferred Date *</Label>
@@ -475,7 +473,7 @@ export default function PicleballBookingForm({ onClose }) {
                     id="preferred_date"
                     type="date"
                     value={formData.preferred_date}
-                    onChange={(e) => handleInputChange('preferred_date', e.target.value)}
+                    onChange={(e) => setFormData(prev => ({ ...prev, preferred_date: e.target.value, selected_court: null }))}
                     required
                     min={new Date().toISOString().split('T')[0]}
                   />
@@ -484,8 +482,7 @@ export default function PicleballBookingForm({ onClose }) {
                   <Label htmlFor="preferred_time">Preferred Time *</Label>
                   <Select
                     value={formData.preferred_time}
-                    onValueChange={(value) => handleInputChange('preferred_time', value)}
-                    required
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, preferred_time: value, selected_court: null }))}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select time slot" />
@@ -505,32 +502,38 @@ export default function PicleballBookingForm({ onClose }) {
                 </div>
               )}
 
+              {/* Court Selection */}
               <CourtSelector 
                 selectedCourt={formData.selected_court}
-                bookedCourts={bookedCourts}
-                onCourtSelect={handleCourtSelect}
+                courtAvailability={courtAvailability}
+                onCourtSelect={(court) => setFormData(prev => ({ ...prev, selected_court: court }))}
                 disabled={!formData.preferred_date || !formData.preferred_time}
+                spotsNeeded={formData.spots_needed}
               />
+
+              {/* Summary */}
+              {formData.selected_court && (
+                <div className="bg-ranch-cream p-4 rounded-lg">
+                  <h4 className="font-semibold text-ranch-charcoal mb-2">Booking Summary</h4>
+                  <div className="text-sm text-gray-700 space-y-1">
+                    <p><strong>Type:</strong> {selectedOption?.label}</p>
+                    <p><strong>Court:</strong> Court {formData.selected_court}</p>
+                    <p><strong>Date:</strong> {formData.preferred_date}</p>
+                    <p><strong>Time:</strong> {formData.preferred_time} (1 hour)</p>
+                    <p className="text-lg font-bold text-ranch-red mt-2">Total: ${selectedOption?.price}</p>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="message">Special Requests or Notes</Label>
                 <Textarea
                   id="message"
                   value={formData.message}
-                  onChange={(e) => handleInputChange('message', e.target.value)}
-                  placeholder="Any special requests, group size, or additional information..."
-                  rows={4}
+                  onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                  placeholder="Any special requests or notes..."
+                  rows={3}
                 />
-              </div>
-
-              <div className="bg-ranch-cream p-4 rounded-lg">
-                <h4 className="font-semibold text-ranch-charcoal mb-2">Booking Information</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Courts are available daily from 6:00 AM to 10:00 PM</li>
-                  <li>• Each court booking is for 1 hour at $40</li>
-                  <li>• We'll contact you within 24 hours to confirm availability</li>
-                  <li>• Equipment rentals available on-site</li>
-                </ul>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -548,7 +551,7 @@ export default function PicleballBookingForm({ onClose }) {
                   className="flex-1 ranch-gradient text-white"
                   disabled={isSubmitting || !formData.preferred_date || !formData.preferred_time || !formData.selected_court}
                 >
-                  {isSubmitting ? "Submitting..." : "Request Booking ($40)"}
+                  {isSubmitting ? "Submitting..." : `Book Now ($${selectedOption?.price})`}
                 </Button>
               </div>
             </form>
