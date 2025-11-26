@@ -204,13 +204,35 @@ export default function Services() {
               </div>
 
               <div className="mt-8 p-6 bg-ranch-cream rounded-xl">
-                <h4 className="font-semibold text-ranch-charcoal mb-2 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-ranch-red" />
-                  Membership Benefits
+                <h4 className="font-semibold text-ranch-charcoal mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-ranch-red" />
+                  Court Booking Options
                 </h4>
-                <p className="text-gray-600">
-                  As a member, enjoy unlimited access to all courts with your monthly membership. 
-                  No hourly fees - just reserve your court and play as much as you want!
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div>
+                      <span className="font-semibold">Full Court</span>
+                      <span className="text-gray-500 ml-2">(4 players)</span>
+                    </div>
+                    <span className="font-bold text-ranch-red">$40/hour</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div>
+                      <span className="font-semibold">Double Open Play</span>
+                      <span className="text-gray-500 ml-2">(2 players)</span>
+                    </div>
+                    <span className="font-bold text-ranch-red">$30/hour</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                    <div>
+                      <span className="font-semibold">Single Open Play</span>
+                      <span className="text-gray-500 ml-2">(1 player)</span>
+                    </div>
+                    <span className="font-bold text-ranch-red">$15/hour</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-3">
+                  Monthly membership ($25/mo) required. Open play bookings share courts with other players.
                 </p>
               </div>
             </div>
