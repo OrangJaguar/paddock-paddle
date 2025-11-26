@@ -39,12 +39,22 @@ Deno.serve(async (req) => {
       return date.toISOString();
     };
 
-    const courts = booking.selected_courts ? booking.selected_courts.join(', ') : 'N/A';
+    const court = booking.selected_court || (booking.selected_courts ? booking.selected_courts[0] : 'N/A');
+    const spots = booking.spots_booked || 4;
+    const bookingType = booking.booking_type || 'full_court';
+    const price = booking.price_paid || 40;
+    
+    const bookingTypeLabels = {
+      'full_court': 'Full Court (4 players)',
+      'double_open': 'Double Open Play (2 players)',
+      'single_open': 'Single Open Play (1 player)'
+    };
+    const typeLabel = bookingTypeLabels[bookingType] || 'Court Booking';
     
     // Create calendar event
     const event = {
-      summary: `🏓 Court ${courts} - ${booking.name}`,
-      description: `Pickleball Court Booking\n\nCustomer: ${booking.name}\nEmail: ${booking.email}\nPhone: ${booking.phone || 'Not provided'}\nCourt(s): ${courts}\n\nNotes: ${booking.message || 'None'}`,
+      summary: `🏓 Court ${court} - ${booking.name} (${spots}/4 spots)`,
+      description: `Pickleball Court Booking\n\nType: ${typeLabel}\nCustomer: ${booking.name}\nEmail: ${booking.email}\nPhone: ${booking.phone || 'Not provided'}\nCourt: ${court}\nSpots: ${spots} of 4\nPrice: $${price}\n\nNotes: ${booking.message || 'None'}`,
       start: {
         dateTime: formatDateTime(startDateTime),
         timeZone: 'America/New_York'

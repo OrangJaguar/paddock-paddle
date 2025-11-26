@@ -78,10 +78,30 @@ export default function BookingSuccess() {
                     <div className="flex items-start gap-3">
                       <Users className="w-5 h-5 text-ranch-red mt-0.5" />
                       <div>
-                        <p className="text-sm text-gray-600">Selected Courts</p>
-                        <p className="font-semibold text-ranch-charcoal">{bookingDetails.courts}</p>
+                        <p className="text-sm text-gray-600">Booking Type</p>
+                        <p className="font-semibold text-ranch-charcoal">
+                          {bookingDetails.bookingTypeLabel || bookingDetails.courts}
+                        </p>
                       </div>
                     </div>
+                    {bookingDetails.court && (
+                      <div className="flex items-start gap-3">
+                        <Users className="w-5 h-5 text-ranch-red mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-600">Court</p>
+                          <p className="font-semibold text-ranch-charcoal">Court {bookingDetails.court}</p>
+                        </div>
+                      </div>
+                    )}
+                    {bookingDetails.spots && (
+                      <div className="flex items-start gap-3">
+                        <Users className="w-5 h-5 text-ranch-red mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-600">Spots Reserved</p>
+                          <p className="font-semibold text-ranch-charcoal">{bookingDetails.spots} of 4</p>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex items-start gap-3">
                       <Calendar className="w-5 h-5 text-ranch-red mt-0.5" />
                       <div>
@@ -93,32 +113,26 @@ export default function BookingSuccess() {
                       <Clock className="w-5 h-5 text-ranch-red mt-0.5" />
                       <div>
                         <p className="text-sm text-gray-600">Time</p>
-                        <p className="font-semibold text-ranch-charcoal">{bookingDetails.time}</p>
+                        <p className="font-semibold text-ranch-charcoal">{bookingDetails.time} (1 hour)</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-ranch-red mt-0.5" />
-                      <div>
-                        <p className="text-sm text-gray-600">Duration</p>
-                        <p className="font-semibold text-ranch-charcoal">{bookingDetails.duration}</p>
+                    {bookingDetails.price && (
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-600">Amount</p>
+                          <p className="font-semibold text-green-600">${bookingDetails.price}</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-                  <h3 className="font-semibold text-blue-900 mb-3">📋 What Happens Next?</h3>
-                  <p className="text-sm text-blue-800">
-                    Our team will review your court reservation request, and someone from our team will reach out at the earliest to confirm your booking.
-                  </p>
-                </div>
-
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
-                  <h3 className="font-semibold text-yellow-900 mb-2">⏱️ Please Note</h3>
-                  <p className="text-sm text-yellow-800">
-                    This is a <strong>reservation request</strong>, not a final confirmation. 
-                    Your courts are not officially reserved until you receive our confirmation email 
-                    and complete payment.
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                  <h3 className="font-semibold text-green-900 mb-3">✅ Booking Confirmed!</h3>
+                  <p className="text-sm text-green-800">
+                    Your court reservation is confirmed. We've added it to our calendar and sent you a confirmation email.
+                    {bookingDetails.spots < 4 && " Since you booked open play, you may share the court with other players."}
                   </p>
                 </div>
               </>
