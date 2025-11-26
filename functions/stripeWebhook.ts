@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
                     <li>✓ <strong>Status:</strong> <span style="color: #22c55e; font-weight: bold;">Active & Verified</span></li>
                     <li>✓ <strong>Plan:</strong> Monthly Membership ($25/month)</li>
                     <li>✓ <strong>Start Date:</strong> ${new Date().toLocaleDateString()}</li>
-                    <li>✓ <strong>Access:</strong> 5 Indoor Courts • Premium Facilities • Unlimited Bookings</li>
+                    <li>✓ <strong>Access:</strong> 5 Indoor Courts • Premium Facilities</li>
                     <li>✓ <strong>Renewal:</strong> Automatic annual renewal</li>
                   </ul>
                 </div>
