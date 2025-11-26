@@ -6,12 +6,15 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
 
 // Price IDs
 const MONTHLY_MEMBERSHIP_PRICE_ID = 'price_1SXq04Fi0RuJvUIcy6v637WM'; // $25/month
-const COURT_BOOKING_PRICE_ID = 'price_1SXq2HFi0RuJvUIciUVjP6JZ'; // $40 one-time
+const FULL_COURT_PRICE_ID = 'price_1SXq2HFi0RuJvUIciUVjP6JZ'; // $40 - Full court (4 spots)
+const DOUBLE_OPEN_PRICE_ID = 'price_1SXqJmFi0RuJvUIcacXl3cmN'; // $30 - Double open play (2 spots)
+const SINGLE_OPEN_PRICE_ID = 'price_1SXqDCFi0RuJvUIcqai14j7Y'; // $15 - Single open play (1 spot)
 
 Deno.serve(async (req) => {
   try {
-    const { email, customerName, metadata, type } = await req.json();
+    const { email, customerName, metadata, type, bookingType } = await req.json();
     // type: 'membership' (default) or 'court_booking'
+    // bookingType: 'full_court', 'double_open', or 'single_open' (for court bookings)
 
     console.log('Received checkout request:', { email, customerName });
 
@@ -60,10 +63,21 @@ Deno.serve(async (req) => {
     console.log('Using origin:', origin);
     
     const isCourtBooking = type === 'court_booking';
-    const priceId = isCourtBooking ? COURT_BOOKING_PRICE_ID : MONTHLY_MEMBERSHIP_PRICE_ID;
-    const mode = isCourtBooking ? 'payment' : 'subscription';
+    let priceId = MONTHLY_MEMBERSHIP_PRICE_ID;
+    let mode = 'subscription';
     
-    console.log('Creating checkout session with price:', priceId, 'mode:', mode);
+    if (isCourtBooking) {
+      mode = 'payment';
+      if (bookingType === 'single_open') {
+        priceId = SINGLE_OPEN_PRICE_ID;
+      } else if (bookingType === 'double_open') {
+        priceId = DOUBLE_OPEN_PRICE_ID;
+      } else {
+        priceId = FULL_COURT_PRICE_ID;
+      }
+    }
+    
+    console.log('Creating checkout session with price:', priceId, 'mode:', mode, 'bookingType:', bookingType);
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
