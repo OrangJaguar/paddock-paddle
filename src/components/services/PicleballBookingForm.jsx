@@ -224,15 +224,22 @@ export default function PicleballBookingForm({ onClose }) {
         throw new Error("User authentication failed. Please log out and log back in.");
       }
 
-      // Re-check availability
-      const existingBookings = await base44.entities.PicleballBooking.filter({
+      // Re-check availability - get ALL bookings for this date/time, then filter in JS
+      const allBookings = await base44.entities.PicleballBooking.filter({
         preferred_date: formData.preferred_date,
-        preferred_time: formData.preferred_time,
-        selected_court: formData.selected_court
+        preferred_time: formData.preferred_time
       });
-      const activeBookings = existingBookings.filter(b => b.status === 'pending' || b.status === 'confirmed');
-      const bookedSpots = activeBookings.reduce((sum, b) => sum + (b.spots_booked || 4), 0);
+      
+      // Filter for this specific court and active status
+      const courtBookings = allBookings.filter(b => 
+        b.selected_court === formData.selected_court && 
+        (b.status === 'pending' || b.status === 'confirmed')
+      );
+      
+      const bookedSpots = courtBookings.reduce((sum, b) => sum + (b.spots_booked || 4), 0);
       const availableSpots = 4 - bookedSpots;
+      
+      console.log('Availability check:', { courtBookings, bookedSpots, availableSpots, needed: formData.spots_needed });
       
       if (availableSpots < formData.spots_needed) {
         alert("Sorry, not enough spots available on this court. Please select a different court.");
@@ -241,6 +248,7 @@ export default function PicleballBookingForm({ onClose }) {
         return;
       }
 
+      // Store booking data in sessionStorage for after payment
       const bookingData = {
         preferred_date: formData.preferred_date,
         preferred_time: formData.preferred_time,
@@ -254,104 +262,38 @@ export default function PicleballBookingForm({ onClose }) {
         phone: freshUser.phone || ""
       };
       
-      // Create the booking
-      const createdBooking = await base44.entities.PicleballBooking.create(bookingData);
-      console.log('✅ Booking created:', createdBooking);
+      // Save pending booking data to sessionStorage - will be used after Stripe payment
+      sessionStorage.setItem('pendingBooking', JSON.stringify(bookingData));
       
-      // Add to Google Calendar
-      try {
-        await base44.functions.invoke('addToGoogleCalendar', {
-          booking: {
-            ...bookingData,
-            id: createdBooking.id
-          }
-        });
-        console.log('✅ Added to Google Calendar');
-      } catch (calendarError) {
-        console.warn('⚠️ Google Calendar sync issue:', calendarError.message);
-      }
-      
-      // Send emails
-      const bookingTypeLabel = selectedOption.label;
-      const customerEmailBody = `
-        <div style="font-family: sans-serif; line-height: 1.6;">
-          <h2>Thank you for your booking, ${freshUser.full_name}!</h2>
-          <p>We've received your pickleball court reservation at Paddock & Paddle.</p>
-          <hr>
-          <h3>Your Booking Details:</h3>
-          <ul>
-            <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
-            <li><strong>Court:</strong> Court ${formData.selected_court}</li>
-            <li><strong>Spots Reserved:</strong> ${formData.spots_needed} of 4</li>
-            <li><strong>Date:</strong> ${formData.preferred_date}</li>
-            <li><strong>Time:</strong> ${formData.preferred_time}</li>
-            <li><strong>Duration:</strong> 1 hour</li>
-            <li><strong>Price:</strong> $${selectedOption.price}</li>
-          </ul>
-          ${formData.spots_needed < 4 ? '<p><em>Note: You are sharing this court with other open-play participants.</em></p>' : ''}
-          <p>We look forward to seeing you on the court!</p>
-          <p>Best,<br>The Paddock & Paddle Team</p>
-        </div>
-      `;
-
-      const adminEmailBody = `
-        <div style="font-family: sans-serif; line-height: 1.6;">
-          <h2>New Pickleball Booking</h2>
-          <hr>
-          <ul>
-            <li><strong>Name:</strong> ${freshUser.full_name}</li>
-            <li><strong>Email:</strong> ${freshUser.email}</li>
-            <li><strong>Phone:</strong> ${freshUser.phone || 'Not provided'}</li>
-            <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
-            <li><strong>Court:</strong> Court ${formData.selected_court}</li>
-            <li><strong>Spots:</strong> ${formData.spots_needed} of 4</li>
-            <li><strong>Date:</strong> ${formData.preferred_date}</li>
-            <li><strong>Time:</strong> ${formData.preferred_time}</li>
-            <li><strong>Price:</strong> $${selectedOption.price}</li>
-            <li><strong>Message:</strong> ${formData.message || 'None'}</li>
-          </ul>
-        </div>
-      `;
-      
-      try {
-        await Promise.all([
-          base44.integrations.Core.SendEmail({
-            to: freshUser.email,
-            subject: `Your Paddock & Paddle Booking Confirmed!`,
-            body: customerEmailBody,
-            from_name: "Paddock & Paddle"
-          }),
-          base44.integrations.Core.SendEmail({
-            to: "info@paddockandpaddle.com",
-            subject: `New Booking: ${bookingTypeLabel} - ${freshUser.full_name}`,
-            body: adminEmailBody,
-            from_name: "Paddock & Paddle Website"
-          })
-        ]);
-      } catch (emailError) {
-        console.warn('⚠️ Email issue:', emailError.message);
-      }
-
-      // Store for success page
-      sessionStorage.setItem('bookingSuccess', JSON.stringify({
-        type: 'pickleball',
+      // Redirect to Stripe for payment
+      console.log('Creating Stripe checkout for court booking...');
+      const checkoutResponse = await base44.functions.invoke('createStripeCheckout', {
+        email: freshUser.email,
+        customerName: freshUser.full_name,
+        type: 'court_booking',
         bookingType: formData.booking_type,
-        bookingTypeLabel: bookingTypeLabel,
-        court: formData.selected_court,
-        spots: formData.spots_needed,
-        date: formData.preferred_date,
-        time: formData.preferred_time,
-        price: selectedOption.price,
-        userName: freshUser.full_name
-      }));
-      
-      window.location.href = createPageUrl("BookingSuccess");
+        metadata: {
+          user_id: freshUser.id,
+          booking_type: formData.booking_type,
+          court: formData.selected_court,
+          date: formData.preferred_date,
+          time: formData.preferred_time,
+          spots: formData.spots_needed
+        }
+      });
+
+      if (checkoutResponse?.data?.url) {
+        console.log('✅ Redirecting to Stripe checkout:', checkoutResponse.data.url);
+        window.location.href = checkoutResponse.data.url;
+      } else {
+        console.error('❌ No checkout URL received:', checkoutResponse);
+        throw new Error("Failed to create payment session. Please try again.");
+      }
     } catch (error) {
       console.error('❌ Error:', error);
       alert(`Failed to submit booking: ${error?.message || 'Unknown error'}`);
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   const handleAuthSuccess = async () => {
