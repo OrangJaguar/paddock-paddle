@@ -163,22 +163,33 @@ export default function PicleballBookingForm({ onClose }) {
 
     setIsCheckingAvailability(true);
     try {
+      // Get all bookings for this date and time
       const bookings = await base44.entities.PicleballBooking.filter({
         preferred_date: formData.preferred_date,
         preferred_time: formData.preferred_time
       });
 
-      const activeBookings = bookings.filter(b => b.status === 'pending' || b.status === 'confirmed');
+      console.log('All bookings for this slot:', bookings);
+
+      // Filter for active bookings only (pending or confirmed, NOT cancelled)
+      const activeBookings = bookings.filter(b => 
+        b.status === 'pending' || b.status === 'confirmed'
+      );
+      
+      console.log('Active bookings:', activeBookings);
       
       // Calculate spots used per court
       const availability = {};
       for (let court = 1; court <= 5; court++) {
         const courtBookings = activeBookings.filter(b => b.selected_court === court);
+        // Default to 4 spots if spots_booked is not set (legacy bookings)
         const bookedSpots = courtBookings.reduce((sum, b) => sum + (b.spots_booked || 4), 0);
         availability[court] = {
           bookedSpots: Math.min(bookedSpots, 4),
-          availableSpots: Math.max(4 - bookedSpots, 0)
+          availableSpots: Math.max(4 - bookedSpots, 0),
+          bookings: courtBookings // Store for debugging
         };
+        console.log(`Court ${court}: ${bookedSpots} spots booked, ${4 - bookedSpots} available`, courtBookings);
       }
       
       setCourtAvailability(availability);
