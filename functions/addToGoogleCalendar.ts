@@ -46,7 +46,6 @@ Deno.serve(async (req) => {
     
     const bookingTypeLabels = {
       'full_court': 'Full Court (4 players)',
-      'double_open': 'Double Open Play (2 players)',
       'single_open': 'Single Open Play (1 player)'
     };
     const typeLabel = bookingTypeLabels[bookingType] || 'Court Booking';

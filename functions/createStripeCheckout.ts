@@ -7,7 +7,6 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
 // Price IDs
 const MONTHLY_MEMBERSHIP_PRICE_ID = 'price_1SXq04Fi0RuJvUIcy6v637WM'; // $25/month
 const FULL_COURT_PRICE_ID = 'price_1SXq2HFi0RuJvUIciUVjP6JZ'; // $40 - Full court (4 spots)
-const DOUBLE_OPEN_PRICE_ID = 'price_1SXqJmFi0RuJvUIcacXl3cmN'; // $30 - Double open play (2 spots)
 const SINGLE_OPEN_PRICE_ID = 'price_1SXqDCFi0RuJvUIcqai14j7Y'; // $15 - Single open play (1 spot)
 
 Deno.serve(async (req) => {
@@ -70,8 +69,6 @@ Deno.serve(async (req) => {
       mode = 'payment';
       if (bookingType === 'single_open') {
         priceId = SINGLE_OPEN_PRICE_ID;
-      } else if (bookingType === 'double_open') {
-        priceId = DOUBLE_OPEN_PRICE_ID;
       } else {
         priceId = FULL_COURT_PRICE_ID;
       }
