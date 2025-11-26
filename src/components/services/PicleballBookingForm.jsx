@@ -253,7 +253,21 @@ export default function PicleballBookingForm({ onClose }) {
       const createdBooking = await base44.entities.PicleballBooking.create(bookingData);
       console.log('✅ Booking created successfully:', createdBooking);
       
-      // 2. Prepare email content
+      // 2. Add to Google Calendar
+      try {
+        await base44.functions.invoke('addToGoogleCalendar', {
+          booking: {
+            ...bookingData,
+            id: createdBooking.id
+          }
+        });
+        console.log('✅ Added to Google Calendar');
+      } catch (calendarError) {
+        console.warn('⚠️ Google Calendar sync issue:', calendarError.message);
+        // Don't fail the booking if calendar sync fails
+      }
+      
+      // 3. Prepare email content
       const courtsList = `Court ${formData.selected_court}`;
       
       const customerEmailBody = `
@@ -296,7 +310,7 @@ export default function PicleballBookingForm({ onClose }) {
         </div>
       `;
       
-      // 3. Send emails (both customer and admin)
+      // 4. Send emails (both customer and admin)
       try {
         await Promise.all([
           base44.integrations.Core.SendEmail({
@@ -318,7 +332,7 @@ export default function PicleballBookingForm({ onClose }) {
         // Don't fail the booking if emails fail
       }
 
-      // 4. Store booking details for success page
+      // 5. Store booking details for success page
       sessionStorage.setItem('bookingSuccess', JSON.stringify({
         type: 'pickleball',
         courts: courtsList,
@@ -329,7 +343,7 @@ export default function PicleballBookingForm({ onClose }) {
         emailSent: true
       }));
       
-      // 5. Redirect to success page
+      // 6. Redirect to success page
       window.location.href = createPageUrl("BookingSuccess");
     } catch (error) {
       console.error('❌ Error submitting booking:', error);
