@@ -259,24 +259,39 @@ export default function PicleballBookingForm({ onClose }) {
         return;
       }
 
-      // Store booking data in sessionStorage for after payment
-      const bookingData = {
-        preferred_date: formData.preferred_date,
-        preferred_time: formData.preferred_time,
-        selected_court: formData.selected_court,
-        spots_booked: formData.spots_needed,
-        booking_type: formData.booking_type,
-        price_paid: selectedOption.price,
-        message: formData.message,
-        name: freshUser.full_name,
-        email: freshUser.email,
-        phone: freshUser.phone || ""
-      };
-      
-      // Save pending booking data to sessionStorage - will be used after Stripe payment
-      sessionStorage.setItem('pendingBooking', JSON.stringify(bookingData));
-      
-      // Redirect to Stripe for payment
+      // 1. CREATE THE BOOKING IMMEDIATELY AS PENDING (reserves the spot)
+      console.log('Creating pending booking to reserve spot...');
+      let pendingBooking;
+      try {
+        pendingBooking = await base44.entities.PicleballBooking.create({
+          preferred_date: formData.preferred_date,
+          preferred_time: formData.preferred_time,
+          selected_court: formData.selected_court,
+          spots_booked: formData.spots_needed,
+          booking_type: formData.booking_type,
+          price_paid: selectedOption.price,
+          message: formData.message,
+          name: freshUser.full_name,
+          email: freshUser.email,
+          phone: freshUser.phone || "",
+          status: 'pending' // Will be confirmed by webhook after payment
+        });
+        console.log('✅ Pending booking created:', pendingBooking.id);
+      } catch (createError) {
+        // Check if it's a unique constraint violation (double booking)
+        if (createError.message?.includes('unique') || createError.message?.includes('duplicate')) {
+          alert("Sorry, this court slot was just booked by someone else. Please select a different time or court.");
+          await checkAvailability();
+          setIsSubmitting(false);
+          return;
+        }
+        throw createError;
+      }
+
+      // Store booking ID in sessionStorage for success page display
+      sessionStorage.setItem('pendingBookingId', pendingBooking.id);
+
+      // 2. Redirect to Stripe for payment, passing booking_id in metadata
       console.log('Creating Stripe checkout for court booking...');
       const checkoutResponse = await base44.functions.invoke('createStripeCheckout', {
         email: freshUser.email,
@@ -284,6 +299,7 @@ export default function PicleballBookingForm({ onClose }) {
         type: 'court_booking',
         bookingType: formData.booking_type,
         metadata: {
+          booking_id: pendingBooking.id, // Critical: links payment to booking
           user_id: freshUser.id,
           booking_type: formData.booking_type,
           court: formData.selected_court,

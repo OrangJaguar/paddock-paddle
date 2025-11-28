@@ -30,14 +30,10 @@ Deno.serve(async (req) => {
     if (period === 'PM' && hours !== 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
     
-    // Create start and end times (1 hour duration)
-    const startDateTime = new Date(`${dateStr}T${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`);
-    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-    
-    // Format for Google Calendar API (ISO format with timezone)
-    const formatDateTime = (date) => {
-      return date.toISOString();
-    };
+    // Format times as local strings for Google Calendar with explicit timezone
+    const startTimeStr = `${dateStr}T${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    const endHours = hours + 1;
+    const endTimeStr = `${dateStr}T${endHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
 
     const court = booking.selected_court || (booking.selected_courts ? booking.selected_courts[0] : 'N/A');
     const spots = booking.spots_booked || 4;
@@ -50,18 +46,22 @@ Deno.serve(async (req) => {
     };
     const typeLabel = bookingTypeLabels[bookingType] || 'Court Booking';
     
-    // Create calendar event
+    // Create calendar event with customer as attendee
     const event = {
       summary: `🏓 Court ${court} - ${booking.name} (${spots}/4 spots)`,
       description: `Pickleball Court Booking\n\nType: ${typeLabel}\nCustomer: ${booking.name}\nEmail: ${booking.email}\nPhone: ${booking.phone || 'Not provided'}\nCourt: ${court}\nSpots: ${spots} of 4\nPrice: $${price}\n\nNotes: ${booking.message || 'None'}`,
       start: {
-        dateTime: formatDateTime(startDateTime),
+        dateTime: startTimeStr,
         timeZone: 'America/New_York'
       },
       end: {
-        dateTime: formatDateTime(endDateTime),
+        dateTime: endTimeStr,
         timeZone: 'America/New_York'
       },
+      // Add customer as attendee so they receive a calendar invite
+      attendees: [
+        { email: booking.email }
+      ],
       reminders: {
         useDefault: false,
         overrides: [

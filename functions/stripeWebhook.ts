@@ -1,9 +1,14 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.7.1';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 import Stripe from 'npm:stripe@14.11.0';
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), {
   apiVersion: '2023-10-16',
 });
+
+const BOOKING_OPTIONS = {
+  'full_court': { label: 'Full Court (4 players)', spots: 4, price: 40 },
+  'single_open': { label: 'Single Open Play (1 player)', spots: 1, price: 15 }
+};
 
 Deno.serve(async (req) => {
   const sig = req.headers.get('stripe-signature');
@@ -33,7 +38,103 @@ Deno.serve(async (req) => {
         const userPhone = metadata.phone || '';
 
         console.log('Processing payment for:', userEmail);
+        console.log('Session metadata:', metadata);
 
+        // Check if this is a COURT BOOKING payment (has booking_id in metadata)
+        if (metadata.booking_id) {
+          console.log('Processing court booking payment for booking:', metadata.booking_id);
+          
+          try {
+            // 1. Confirm the booking
+            const booking = await base44.asServiceRole.entities.PicleballBooking.update(metadata.booking_id, {
+              status: 'confirmed',
+              payment_intent_id: session.payment_intent
+            });
+            console.log('✅ Booking confirmed:', metadata.booking_id);
+
+            // Fetch the full booking data for calendar and emails
+            const bookings = await base44.asServiceRole.entities.PicleballBooking.filter({ id: metadata.booking_id });
+            const fullBooking = bookings[0];
+
+            if (fullBooking) {
+              // 2. Add to Google Calendar (server-side - reliable even if browser closes)
+              try {
+                await base44.asServiceRole.functions.invoke('addToGoogleCalendar', { 
+                  booking: fullBooking 
+                });
+                console.log('✅ Added to Google Calendar');
+              } catch (calendarError) {
+                console.error('⚠️ Google Calendar error:', calendarError.message);
+              }
+
+              // 3. Send confirmation emails
+              const bookingOption = BOOKING_OPTIONS[fullBooking.booking_type] || BOOKING_OPTIONS['full_court'];
+              const bookingTypeLabel = bookingOption.label;
+
+              const customerEmailBody = `
+                <div style="font-family: sans-serif; line-height: 1.6;">
+                  <h2>Thank you for your booking, ${fullBooking.name}!</h2>
+                  <p>Your payment has been received and your court is confirmed at Paddock & Paddle.</p>
+                  <hr>
+                  <h3>Your Booking Details:</h3>
+                  <ul>
+                    <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
+                    <li><strong>Court:</strong> Court ${fullBooking.selected_court}</li>
+                    <li><strong>Spots Reserved:</strong> ${fullBooking.spots_booked} of 4</li>
+                    <li><strong>Date:</strong> ${fullBooking.preferred_date}</li>
+                    <li><strong>Time:</strong> ${fullBooking.preferred_time}</li>
+                    <li><strong>Duration:</strong> 1 hour</li>
+                    <li><strong>Amount Paid:</strong> $${fullBooking.price_paid}</li>
+                  </ul>
+                  ${fullBooking.spots_booked < 4 ? '<p><em>Note: You are sharing this court with other open-play participants.</em></p>' : ''}
+                  <p>We look forward to seeing you on the court!</p>
+                  <p>Best,<br>The Paddock & Paddle Team</p>
+                </div>
+              `;
+
+              const adminEmailBody = `
+                <div style="font-family: sans-serif; line-height: 1.6;">
+                  <h2>New Paid Pickleball Booking</h2>
+                  <hr>
+                  <ul>
+                    <li><strong>Name:</strong> ${fullBooking.name}</li>
+                    <li><strong>Email:</strong> ${fullBooking.email}</li>
+                    <li><strong>Phone:</strong> ${fullBooking.phone || 'Not provided'}</li>
+                    <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
+                    <li><strong>Court:</strong> Court ${fullBooking.selected_court}</li>
+                    <li><strong>Spots:</strong> ${fullBooking.spots_booked} of 4</li>
+                    <li><strong>Date:</strong> ${fullBooking.preferred_date}</li>
+                    <li><strong>Time:</strong> ${fullBooking.preferred_time}</li>
+                    <li><strong>Amount Paid:</strong> $${fullBooking.price_paid}</li>
+                    <li><strong>Message:</strong> ${fullBooking.message || 'None'}</li>
+                  </ul>
+                </div>
+              `;
+
+              await Promise.all([
+                base44.asServiceRole.integrations.Core.SendEmail({
+                  to: fullBooking.email,
+                  subject: `Your Paddock & Paddle Court Booking is Confirmed!`,
+                  body: customerEmailBody,
+                  from_name: "Paddock & Paddle"
+                }),
+                base44.asServiceRole.integrations.Core.SendEmail({
+                  to: "info@paddockandpaddle.com",
+                  subject: `New Paid Booking: ${bookingTypeLabel} - ${fullBooking.name}`,
+                  body: adminEmailBody,
+                  from_name: "Paddock & Paddle Website"
+                })
+              ]);
+              console.log('✅ Confirmation emails sent');
+            }
+          } catch (bookingError) {
+            console.error('❌ Error confirming booking:', bookingError);
+          }
+          
+          break; // Exit the case - this was a court booking, not membership
+        }
+
+        // Otherwise, this is a MEMBERSHIP payment
         const existingUsers = await base44.asServiceRole.entities.User.filter({ email: userEmail });
 
         if (existingUsers.length > 0) {
