@@ -18,123 +18,55 @@ export default function BookingSuccess() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    processBookingAfterPayment();
+    loadBookingDetails();
   }, []);
 
-  const processBookingAfterPayment = async () => {
+  const loadBookingDetails = async () => {
     try {
-      // Check if this is a return from Stripe payment
+      // Check if this is a return from Stripe payment for a court booking
       const urlParams = new URLSearchParams(window.location.search);
       const paymentSuccess = urlParams.get('payment');
-      const sessionId = urlParams.get('session_id');
       
-      // Get pending booking data from sessionStorage
-      const pendingBookingData = sessionStorage.getItem('pendingBooking');
+      // Get pending booking ID from sessionStorage
+      const pendingBookingId = sessionStorage.getItem('pendingBookingId');
       
-      if (paymentSuccess === 'success' && pendingBookingData) {
-        console.log('Processing booking after successful Stripe payment...');
+      if (paymentSuccess === 'success' && pendingBookingId) {
+        console.log('Loading booking details for:', pendingBookingId);
         
-        const bookingData = JSON.parse(pendingBookingData);
-        const freshUser = await base44.auth.me();
+        // The webhook has already confirmed the booking, just fetch it for display
+        // Small delay to allow webhook to process
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Create the booking now that payment is confirmed
-        const createdBooking = await base44.entities.PicleballBooking.create({
-          ...bookingData,
-          status: 'confirmed' // Mark as confirmed since payment succeeded
-        });
-        console.log('✅ Booking created after payment:', createdBooking);
+        const user = await base44.auth.me();
+        const bookings = await base44.entities.PicleballBooking.filter({ id: pendingBookingId });
         
-        // Add to Google Calendar
-        try {
-          await base44.functions.invoke('addToGoogleCalendar', {
-            booking: {
-              ...bookingData,
-              id: createdBooking.id
-            }
+        if (bookings.length > 0) {
+          const booking = bookings[0];
+          const bookingOption = BOOKING_OPTIONS[booking.booking_type] || BOOKING_OPTIONS['full_court'];
+          
+          setBookingDetails({
+            type: 'pickleball',
+            bookingType: booking.booking_type,
+            bookingTypeLabel: bookingOption.label,
+            court: booking.selected_court,
+            spots: booking.spots_booked,
+            date: booking.preferred_date,
+            time: booking.preferred_time,
+            price: booking.price_paid,
+            userName: booking.name,
+            status: booking.status
           });
-          console.log('✅ Added to Google Calendar');
-        } catch (calendarError) {
-          console.warn('⚠️ Google Calendar sync issue:', calendarError.message);
+        } else {
+          // Booking not found - might still be processing
+          setBookingDetails({
+            type: 'pickleball',
+            userName: user?.full_name || 'Member',
+            status: 'processing'
+          });
         }
         
-        // Send confirmation emails
-        const bookingOption = BOOKING_OPTIONS[bookingData.booking_type] || BOOKING_OPTIONS['full_court'];
-        const bookingTypeLabel = bookingOption.label;
-        
-        const customerEmailBody = `
-          <div style="font-family: sans-serif; line-height: 1.6;">
-            <h2>Thank you for your booking, ${bookingData.name}!</h2>
-            <p>Your payment has been received and your court is confirmed at Paddock & Paddle.</p>
-            <hr>
-            <h3>Your Booking Details:</h3>
-            <ul>
-              <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
-              <li><strong>Court:</strong> Court ${bookingData.selected_court}</li>
-              <li><strong>Spots Reserved:</strong> ${bookingData.spots_booked} of 4</li>
-              <li><strong>Date:</strong> ${bookingData.preferred_date}</li>
-              <li><strong>Time:</strong> ${bookingData.preferred_time}</li>
-              <li><strong>Duration:</strong> 1 hour</li>
-              <li><strong>Amount Paid:</strong> $${bookingData.price_paid}</li>
-            </ul>
-            ${bookingData.spots_booked < 4 ? '<p><em>Note: You are sharing this court with other open-play participants.</em></p>' : ''}
-            <p>We look forward to seeing you on the court!</p>
-            <p>Best,<br>The Paddock & Paddle Team</p>
-          </div>
-        `;
-
-        const adminEmailBody = `
-          <div style="font-family: sans-serif; line-height: 1.6;">
-            <h2>New Paid Pickleball Booking</h2>
-            <hr>
-            <ul>
-              <li><strong>Name:</strong> ${bookingData.name}</li>
-              <li><strong>Email:</strong> ${bookingData.email}</li>
-              <li><strong>Phone:</strong> ${bookingData.phone || 'Not provided'}</li>
-              <li><strong>Booking Type:</strong> ${bookingTypeLabel}</li>
-              <li><strong>Court:</strong> Court ${bookingData.selected_court}</li>
-              <li><strong>Spots:</strong> ${bookingData.spots_booked} of 4</li>
-              <li><strong>Date:</strong> ${bookingData.preferred_date}</li>
-              <li><strong>Time:</strong> ${bookingData.preferred_time}</li>
-              <li><strong>Amount Paid:</strong> $${bookingData.price_paid}</li>
-              <li><strong>Message:</strong> ${bookingData.message || 'None'}</li>
-            </ul>
-          </div>
-        `;
-        
-        try {
-          await Promise.all([
-            base44.integrations.Core.SendEmail({
-              to: bookingData.email,
-              subject: `Your Paddock & Paddle Court Booking is Confirmed!`,
-              body: customerEmailBody,
-              from_name: "Paddock & Paddle"
-            }),
-            base44.integrations.Core.SendEmail({
-              to: "info@paddockandpaddle.com",
-              subject: `New Paid Booking: ${bookingTypeLabel} - ${bookingData.name}`,
-              body: adminEmailBody,
-              from_name: "Paddock & Paddle Website"
-            })
-          ]);
-        } catch (emailError) {
-          console.warn('⚠️ Email issue:', emailError.message);
-        }
-        
-        // Clear pending booking data
-        sessionStorage.removeItem('pendingBooking');
-        
-        // Set booking details for display
-        setBookingDetails({
-          type: 'pickleball',
-          bookingType: bookingData.booking_type,
-          bookingTypeLabel: bookingTypeLabel,
-          court: bookingData.selected_court,
-          spots: bookingData.spots_booked,
-          date: bookingData.preferred_date,
-          time: bookingData.preferred_time,
-          price: bookingData.price_paid,
-          userName: bookingData.name
-        });
+        // Clear pending booking ID
+        sessionStorage.removeItem('pendingBookingId');
       } else {
         // Check for legacy bookingSuccess data (for boarding inquiries)
         const storedData = sessionStorage.getItem('bookingSuccess');
@@ -145,7 +77,7 @@ export default function BookingSuccess() {
         }
       }
     } catch (error) {
-      console.error('Error processing booking:', error);
+      console.error('Error loading booking details:', error);
       setError(error.message);
     }
     
