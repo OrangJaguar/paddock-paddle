@@ -11,12 +11,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Lock, Mail, User, Phone, AlertCircle, CreditCard, ArrowRight, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2, Eye, EyeOff } from "lucide-react";
+import { Lock, Mail, User, Phone, AlertCircle, CreditCard, ArrowRight, CheckCircle, XCircle, Loader2, Eye, EyeOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import LoadingAnimation from "../ui/LoadingAnimation";
 import VerificationCodeInput from "../ui/VerificationCodeInput";
-
-const MEMBERSHIP_PASSWORD = "idinkthereforeiam";
 
 const PasswordRequirements = ({ password }) => {
   const requirements = [
@@ -58,7 +56,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
   const [resetCodeSent, setResetCodeSent] = useState(false);
   const [resetCode, setResetCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [showMembershipInfo, setShowMembershipInfo] = useState(false);
   const [verificationCode, setVerificationCode] = useState(""); // State for signup email verification code
   const [showPassword, setShowPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
@@ -146,8 +143,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
-    membershipPassword: ""
+    confirmPassword: ""
   });
 
   const validatePassword = (password) => {
@@ -232,11 +228,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
 
     if (signupData.password !== signupData.confirmPassword) {
       setError("Passwords do not match");
-      return;
-    }
-
-    if (signupData.membershipPassword !== MEMBERSHIP_PASSWORD) {
-      setError("Invalid membership code. Please contact customer service for assistance.");
       return;
     }
 
@@ -649,38 +640,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess, defaultTab = "lo
                           {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Label>Membership Code *</Label>
-                        <button
-                          type="button"
-                          onClick={() => setShowMembershipInfo(!showMembershipInfo)}
-                          className="text-sm text-ranch-red hover:underline flex items-center gap-1"
-                        >
-                          What is this?
-                          {showMembershipInfo ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                        </button>
-                      </div>
-                      <Input
-                        type="password"
-                        value={signupData.membershipPassword}
-                        onChange={(e) => setSignupData({ ...signupData, membershipPassword: e.target.value })}
-                        placeholder="Enter membership code"
-                        required
-                      />
-                      {showMembershipInfo && (
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
-                          <p className="text-yellow-800">
-                            This is an exclusive code provided by Paddock & Paddle administration. 
-                            If you don't have this code, please contact customer service at{" "}
-                            <a href="mailto:info@paddockandpaddle.com" className="underline">
-                              info@paddockandpaddle.com
-                            </a>
-                          </p>
-                        </div>
-                      )}
                     </div>
 
                     <Button type="submit" className="w-full ranch-gradient text-white" disabled={isSubmitting}>
