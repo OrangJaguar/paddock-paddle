@@ -93,7 +93,7 @@ export default function Services() {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/4e164a391_photo-1693142517898-2f986215e4121.jpg')`,
+            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/541ebe8b6_ScreenShot2025-12-13at44505PM.png')`,
             backgroundPosition: 'center center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'
@@ -145,7 +145,7 @@ export default function Services() {
           <div className="grid lg:grid-cols-2 gap-12 mb-16">
             <div>
               <img
-                src="https://www.southcoastpickleball.com/wp-content/uploads/2022/07/IMG_8415.1.jpg"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/541ebe8b6_ScreenShot2025-12-13at44505PM.png"
                 alt="Luxury indoor pickleball courts at Paddock & Paddle"
                 className="rounded-2xl shadow-2xl mb-8"
               />
@@ -326,8 +326,8 @@ export default function Services() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1553284966-19b8815c7817?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                alt="Horses in pasture at Paddock & Paddle"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/e47148228_ScreenShot2025-12-13at44513PM.png"
+                alt="Horse stalls at Paddock & Paddle"
                 className="rounded-2xl shadow-2xl"
               />
             </div>

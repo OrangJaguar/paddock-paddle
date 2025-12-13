@@ -10,7 +10,7 @@ export default function About() {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/2a82845fd_download.jpg')`,
+            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/e9e12fadb_ScreenShot2025-12-13at44523PM.png')`,
             backgroundPosition: 'center center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'
@@ -55,8 +55,8 @@ export default function About() {
             </div>
             <div>
               <img
-                src="https://www.diadempickleballcomplex.com/cdn/shop/files/Holidays_Decoration_Guide_Newsletter_Email_Marketing_Medium_Banner_US_Landscape_10.png?v=1735233176&width=1920"
-                alt="Luxury club grounds"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/0ca984f67_ScreenShot2025-12-13at44453PM.png"
+                alt="Luxury barn interior at Paddock & Paddle"
                 className="rounded-3xl shadow-2xl w-full h-[500px] object-cover" />
             </div>
           </div>
@@ -157,8 +157,8 @@ export default function About() {
             </div>
             <div>
               <img
-                src="https://rethinkrural.raydientrural.com/hs-fs/hubfs/Blog_Photos/Buying_Land/Acreage_Series/Land_for_Horse_Boarding_Lead.jpg?length=1151&name=Land_for_Horse_Boarding_Lead.jpg"
-                alt="Majestic landscape with mountain sunset"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/671935bc0_ScreenShot2025-12-13at44445PM.png"
+                alt="Horse stalls and barn facilities"
                 className="rounded-3xl shadow-2xl w-full h-[500px] object-cover" />
             </div>
           </div>
