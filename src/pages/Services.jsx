@@ -93,7 +93,7 @@ export default function Services() {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/541ebe8b6_ScreenShot2025-12-13at44505PM.png')`,
+            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/4e164a391_photo-1693142517898-2f986215e4121.jpg')`,
             backgroundPosition: 'center center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'

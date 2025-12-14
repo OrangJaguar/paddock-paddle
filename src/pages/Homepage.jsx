@@ -13,7 +13,7 @@ export default function Homepage() {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/541ebe8b6_ScreenShot2025-12-13at44505PM.png')`,
+            backgroundImage: `url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/9087e434a_photo-1642104798671-01a4129f4fdc1.jpg')`,
             backgroundPosition: 'center center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'
@@ -116,7 +116,7 @@ export default function Homepage() {
           <div className="grid md:grid-cols-2 gap-12 items-center mt-20">
             <div className="md:order-2">
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/e47148228_ScreenShot2025-12-13at44513PM.png"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/4b7ec0b18_image.png"
                 alt="Premium horse boarding at Paddock & Paddle"
                 className="rounded-3xl shadow-2xl w-full h-[500px] object-cover"
               />
