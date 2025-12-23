@@ -392,6 +392,7 @@ export default function Layout({ children, currentPageName }) {
           
           <div className="border-t border-gray-200 mt-12 pt-8 text-center text-gray-500">
             <p className="text-sm">© 2025 Paddock & Paddle. All rights reserved. | Indoor Pickleball Courts & Horse Boarding in Dublin, Ohio</p>
+            <p className="text-xs mt-2 text-gray-400">Website Crafted by Sanskar and Shubham</p>
           </div>
         </div>
       </footer>
