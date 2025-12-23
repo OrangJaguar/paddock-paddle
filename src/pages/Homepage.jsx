@@ -27,7 +27,7 @@ export default function Homepage() {
             Welcome to Paddock & Paddle
           </h1>
           <p className="text-xl md:text-2xl text-white mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-            Dublin's premier luxury club featuring world-class indoor pickleball courts and 
+            Delaware's premier luxury club featuring world-class indoor pickleball courts and 
             exceptional equestrian facilities in the heart of Ohio.
           </p>
           
@@ -69,7 +69,7 @@ export default function Homepage() {
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
               From morning rides to evening matches, Paddock & Paddle offers an unparalleled luxury club experience 
-              with state-of-the-art indoor facilities and premium amenities in beautiful Dublin, Ohio.
+                with state-of-the-art indoor facilities and premium amenities in beautiful Delaware, Ohio.
             </p>
           </div>
 
@@ -183,7 +183,7 @@ export default function Homepage() {
           </h2>
           <p className="text-xl text-gray-600 mb-10">
             Join our exclusive community of pickleball enthusiasts and equestrian lovers. Reserve your visit today 
-            and discover why Paddock & Paddle is Dublin's premier luxury destination.
+            and discover why Paddock & Paddle is Delaware's premier luxury destination.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

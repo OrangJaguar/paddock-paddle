@@ -123,10 +123,10 @@ export default function Layout({ children, currentPageName }) {
           "image": "https://paddockandpaddle.com/og-image.jpg",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "8220 Dublin Road",
-            "addressLocality": "Dublin",
+            "streetAddress": "8220 Dublin Rd",
+            "addressLocality": "Delaware",
             "addressRegion": "OH",
-            "postalCode": "43017",
+            "postalCode": "43015",
             "addressCountry": "US"
           },
           "geo": {
@@ -134,7 +134,7 @@ export default function Layout({ children, currentPageName }) {
             "latitude": "40.0992",
             "longitude": "-83.1141"
           },
-          "telephone": "+1-614-123-4567",
+          "telephone": "+1-614-495-4995",
           "email": "info@paddockandpaddle.com",
           "priceRange": "$$-$$$",
           "openingHoursSpecification": [
@@ -155,7 +155,7 @@ export default function Layout({ children, currentPageName }) {
             "https://www.facebook.com/profile.php?id=61583481638835",
             "https://www.instagram.com/paddockandpaddle"
           ],
-          "hasMap": "https://maps.google.com/?q=8220+Dublin+Road+Dublin+OH+43017",
+          "hasMap": "https://maps.google.com/?q=8220+Dublin+Rd+Delaware+OH+43015",
           "amenityFeature": [
             {
               "@type": "LocationFeatureSpecification",
@@ -220,9 +220,9 @@ export default function Layout({ children, currentPageName }) {
         <div className="bg-ranch-red py-2">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center md:justify-end items-center space-x-6 text-white text-sm">
-              <a href="tel:+16141234567" className="flex items-center gap-1 hover:opacity-80">
+              <a href="tel:+16144954995" className="flex items-center gap-1 hover:opacity-80">
                 <Phone className="w-3 h-3" />
-                <span>(614) 123-4567</span>
+                <span>(614) 495-4995</span>
               </a>
               <a href="mailto:info@paddockandpaddle.com" className="flex items-center gap-1 hover:opacity-80">
                 <Mail className="w-3 h-3" />
@@ -367,7 +367,7 @@ export default function Layout({ children, currentPageName }) {
               </p>
               <div className="flex items-center gap-2 text-gray-600">
                   <MapPin className="w-4 h-4" />
-                  <address className="not-italic">8220 Dublin Road, Dublin, OH 43017</address>
+                  <address className="not-italic">8220 Dublin Rd, Delaware, OH 43015</address>
                 </div>
             </div>
             
@@ -391,7 +391,7 @@ export default function Layout({ children, currentPageName }) {
           </div>
           
           <div className="border-t border-gray-200 mt-12 pt-8 text-center text-gray-500">
-            <p className="text-sm">© 2025 Paddock & Paddle. All rights reserved. | Indoor Pickleball Courts & Horse Boarding in Dublin, Ohio</p>
+            <p className="text-sm">© 2025 Paddock & Paddle. All rights reserved. | Indoor Pickleball Courts & Horse Boarding in Delaware, Ohio</p>
             <p className="text-xs mt-2 text-gray-400">Website Crafted by Sanskar and Shubham</p>
           </div>
         </div>

@@ -163,8 +163,8 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold text-ranch-charcoal mb-2">Visit Us</h3>
                         <p className="text-gray-600">
-                          8220 Dublin Road<br />
-                          Dublin, OH 43017<br />
+                          8220 Dublin Rd<br />
+                          Delaware, OH 43015<br />
                           United States
                         </p>
                       </div>
@@ -181,8 +181,8 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold text-ranch-charcoal mb-2">Call Us</h3>
                         <p className="text-gray-600">
-                          Main: (614) 123-4567<br />
-                          Equestrian Center: (614) 123-4568
+                          Main: (614) 495-4995<br />
+                          Equestrian Center: (614) 495-4996
                         </p>
                       </div>
                     </div>
@@ -394,11 +394,11 @@ export default function Contact() {
                 <MapPin className="w-16 h-16 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Interactive Map</h3>
                 <p className="max-w-md">
-                  8220 Dublin Road, Dublin, OH 43017<br />
+                  8220 Dublin Rd, Delaware, OH 43015<br />
                   Get directions and explore our location
                 </p>
                 <a
-                  href="https://www.google.com/maps/dir//8220+Dublin+Road+Dublin+OH+43017"
+                  href="https://www.google.com/maps/dir//8220+Dublin+Rd+Delaware+OH+43015"
                   target="_blank"
                   rel="noopener noreferrer">
 
@@ -418,19 +418,19 @@ export default function Contact() {
               <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h4 className="font-semibold text-ranch-charcoal mb-3">From Downtown Columbus</h4>
                 <ul className="text-gray-600 space-y-1 text-sm">
-                  <li>• Take I-670 W to I-270 N</li>
-                  <li>• Follow I-270 N to Exit 17A for OH-161/US-33 E</li>
-                  <li>• Merge onto US-33 E/Dublin Rd</li>
-                  <li>• Our entrance will be on the right in 2 miles</li>
+                  <li>• Take US-23 N toward Delaware</li>
+                  <li>• Exit onto Dublin Rd/OH-745</li>
+                  <li>• Continue on Dublin Rd for approximately 3 miles</li>
+                  <li>• Our entrance will be on the right</li>
                 </ul>
               </div>
               <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h4 className="font-semibold text-ranch-charcoal mb-3">From the North (I-71)</h4>
                 <ul className="text-gray-600 space-y-1 text-sm">
-                  <li>• Take I-71 S to I-270 W</li>
-                  <li>• Follow I-270 W to Exit 17 for US-33 E</li>
-                  <li>• Keep left at the fork to continue on US-33 E</li>
-                  <li>• Our entrance will be on the right in 2 miles</li>
+                  <li>• Take I-71 S to Exit 131 for US-36/OH-37</li>
+                  <li>• Turn right onto US-36 W/OH-37 W</li>
+                  <li>• Turn left onto Dublin Rd/OH-745 S</li>
+                  <li>• Our entrance will be on the right</li>
                 </ul>
               </div>
             </div>
