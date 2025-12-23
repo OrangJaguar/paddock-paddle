@@ -385,7 +385,7 @@ export default function Layout({ children, currentPageName }) {
               <ul className="space-y-2 text-gray-600">
                 <li><Link to={createPageUrl("About")} className="hover:text-ranch-red transition-colors">About Us</Link></li>
                 <li><Link to={createPageUrl("Contact")} className="hover:text-ranch-red transition-colors">Contact</Link></li>
-                <li><a href="#" className="hover:text-ranch-red transition-colors">Follow Us</a></li>
+                <li><a href="https://www.instagram.com/paddockandpaddle" target="_blank" rel="noopener noreferrer" className="hover:text-ranch-red transition-colors">Follow Us on Instagram</a></li>
               </ul>
             </div>
           </div>
