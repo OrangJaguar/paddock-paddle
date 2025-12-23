@@ -130,8 +130,186 @@ export default function Services() {
         </div>
       </section>
 
+      {/* Membership Options - NEW SECTION */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-ranch-charcoal mb-6">
+              Membership Options
+            </h2>
+            <p className="text-xl text-gray-600">
+              Choose the plan that's right for you
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {/* First 50 Members - Featured */}
+            <Card className="relative overflow-hidden border-4 border-amber-400 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1 text-xs font-bold transform rotate-12 translate-x-8 translate-y-2">
+                LIMITED
+              </div>
+              <CardHeader className="bg-gradient-to-br from-amber-50 to-amber-100 pb-4">
+                <div className="text-center">
+                  <Badge className="mb-3 bg-amber-500 text-white px-3 py-1">First 50 Members!</Badge>
+                  <CardTitle className="text-2xl font-bold text-ranch-charcoal mb-2">
+                    Initial 50
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mb-4">No initiation fee</p>
+                  <div className="text-4xl font-bold text-ranch-red mb-1">$12</div>
+                  <p className="text-sm text-gray-500">/month</p>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-3">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Court Rental:</span>
+                    <span className="font-bold">$36/hr</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Per Person:</span>
+                    <span className="font-bold">$9</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">2-Hour Rate:</span>
+                    <span className="font-bold">$72</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Open Play:</span>
+                    <span className="font-bold">$9/90min</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    Reserve 1 month ahead
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Members */}
+            <Card className="border-2 border-ranch-red shadow-xl hover:shadow-2xl transition-shadow duration-300">
+              <CardHeader className="bg-gradient-to-br from-red-50 to-white pb-4">
+                <div className="text-center">
+                  <CardTitle className="text-2xl font-bold text-ranch-charcoal mb-2">
+                    Members
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mb-4">$49 initiation fee</p>
+                  <div className="text-4xl font-bold text-ranch-red mb-1">$18</div>
+                  <p className="text-sm text-gray-500">/month</p>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-3">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Court Rental:</span>
+                    <span className="font-bold">$40/hr</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Per Person:</span>
+                    <span className="font-bold">$10</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Open Play:</span>
+                    <span className="font-bold">$10/90min</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    Reserve 2 weeks ahead
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Family Add-ons */}
+            <Card className="border-2 border-gray-300 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <CardHeader className="bg-gradient-to-br from-gray-50 to-white pb-4">
+                <div className="text-center">
+                  <CardTitle className="text-2xl font-bold text-ranch-charcoal mb-2">
+                    Family Add-on
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mb-4">Not for initial members</p>
+                  <div className="text-4xl font-bold text-ranch-red mb-1">$15</div>
+                  <p className="text-sm text-gray-500">/month</p>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-3">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Court Rental:</span>
+                    <span className="font-bold">$40/hr</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Per Person:</span>
+                    <span className="font-bold">$10</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Open Play:</span>
+                    <span className="font-bold">$10/90min</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    Reserve 2 weeks ahead
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Pay to Play */}
+            <Card className="border-2 border-gray-400 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-gray-50">
+              <CardHeader className="bg-gradient-to-br from-gray-100 to-gray-50 pb-4">
+                <div className="text-center">
+                  <CardTitle className="text-2xl font-bold text-ranch-charcoal mb-2">
+                    Pay to Play
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mb-4">No membership</p>
+                  <div className="text-4xl font-bold text-ranch-red mb-1">$0</div>
+                  <p className="text-sm text-gray-500">/month</p>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-3">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Court Rental:</span>
+                    <span className="font-bold">$52/hr</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Per Person:</span>
+                    <span className="font-bold">$13</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Open Play:</span>
+                    <span className="font-bold">$15/90min</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    Reserve 2 days ahead
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <Button
+              size="lg"
+              className="ranch-gradient text-white px-10 py-4"
+              onClick={() => setActiveBookingForm('pickleball')}
+            >
+              Reserve Your Court Now
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Pickleball Services */}
-      <section className="py-20">
+      <section className="py-20 bg-ranch-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-ranch-charcoal mb-6">
@@ -203,133 +381,15 @@ export default function Services() {
                 </div>
               </div>
 
-              <div className="mt-8 space-y-4">
-                <h4 className="font-semibold text-ranch-charcoal text-xl mb-4">Membership Options</h4>
-                
-                {/* First 50 Members Special */}
-                <Card className="border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-white">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge className="bg-amber-500 text-white">First 50 Members!</Badge>
-                        </div>
-                        <h5 className="font-bold text-ranch-charcoal mb-1">Initial 50 Members</h5>
-                        <p className="text-sm text-gray-600 mb-3">No initiation fee • Reserve 1 month ahead</p>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Monthly Membership:</span>
-                            <span className="font-semibold">$12/month</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Court Rental:</span>
-                            <span className="font-semibold">$36/hr ($9/person)</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">2-Hour Rate:</span>
-                            <span className="font-semibold">$72</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Open Play:</span>
-                            <span className="font-semibold">$9 for 90 mins</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
 
-                {/* Regular Members */}
-                <Card className="border-2 border-ranch-red">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h5 className="font-bold text-ranch-charcoal mb-1">Members</h5>
-                        <p className="text-sm text-gray-600 mb-3">$49 initiation fee • 2 weeks advance booking</p>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Monthly Membership:</span>
-                            <span className="font-semibold">$18/month</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Court Rental:</span>
-                            <span className="font-semibold">$40/hr ($10/person)</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Open Play:</span>
-                            <span className="font-semibold">$10 for 90 mins</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Family Add-ons */}
-                <Card className="border border-gray-300">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h5 className="font-bold text-ranch-charcoal mb-1">Family Add-ons</h5>
-                        <p className="text-sm text-gray-600 mb-3">Not for initial members • 2 weeks advance booking</p>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Monthly Membership:</span>
-                            <span className="font-semibold">$15/month</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Court Rental:</span>
-                            <span className="font-semibold">$40/hr ($10/person)</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Open Play:</span>
-                            <span className="font-semibold">$10 for 90 mins</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Pay to Play */}
-                <Card className="border border-gray-300 bg-gray-50">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h5 className="font-bold text-ranch-charcoal mb-1">Pay to Play</h5>
-                        <p className="text-sm text-gray-600 mb-3">No membership required • 2 days advance booking</p>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Court Rental:</span>
-                            <span className="font-semibold">$52/hr ($13/person)</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Open Play:</span>
-                            <span className="font-semibold">$15 for 90 mins</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
             </div>
           </div>
 
-          <div className="text-center">
-            <Button
-              size="lg"
-              className="ranch-gradient text-white px-10 py-4"
-              onClick={() => setActiveBookingForm('pickleball')}
-            >
-              Reserve Your Court Now
-            </Button>
-          </div>
         </div>
       </section>
 
       {/* Horse Boarding Services */}
-      <section className="py-20 bg-ranch-cream">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-ranch-charcoal mb-6">
