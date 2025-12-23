@@ -238,7 +238,9 @@ export default function Contact() {
                     <Instagram className="w-5 h-5" />
                   </a>
                   <a
-                    href="#"
+                    href="https://www.facebook.com/profile.php?id=61583481638835"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-12 h-12 bg-ranch-red rounded-full flex items-center justify-center text-white hover:bg-opacity-90 transition-all duration-200">
                     <Facebook className="w-5 h-5" />
                   </a>

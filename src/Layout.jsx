@@ -152,7 +152,7 @@ export default function Layout({ children, currentPageName }) {
             }
           ],
           "sameAs": [
-            "https://www.facebook.com/paddockandpaddle",
+            "https://www.facebook.com/profile.php?id=61583481638835",
             "https://www.instagram.com/paddockandpaddle"
           ],
           "hasMap": "https://maps.google.com/?q=8220+Dublin+Road+Dublin+OH+43017",
