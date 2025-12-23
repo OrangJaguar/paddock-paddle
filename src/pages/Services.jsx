@@ -203,30 +203,115 @@ export default function Services() {
                 </div>
               </div>
 
-              <div className="mt-8 p-6 bg-ranch-cream rounded-xl">
-                <h4 className="font-semibold text-ranch-charcoal mb-4 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-ranch-red" />
-                  Court Booking Options
-                </h4>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <div>
-                      <span className="font-semibold">Full Court</span>
-                      <span className="text-gray-500 ml-2">(4 players)</span>
+              <div className="mt-8 space-y-4">
+                <h4 className="font-semibold text-ranch-charcoal text-xl mb-4">Membership Options</h4>
+                
+                {/* First 50 Members Special */}
+                <Card className="border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-white">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge className="bg-amber-500 text-white">First 50 Members!</Badge>
+                        </div>
+                        <h5 className="font-bold text-ranch-charcoal mb-1">Initial 50 Members</h5>
+                        <p className="text-sm text-gray-600 mb-3">No initiation fee • Reserve 1 month ahead</p>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Monthly Membership:</span>
+                            <span className="font-semibold">$12/month</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Court Rental:</span>
+                            <span className="font-semibold">$36/hr ($9/person)</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">2-Hour Rate:</span>
+                            <span className="font-semibold">$72</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Open Play:</span>
+                            <span className="font-semibold">$9 for 90 mins</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <span className="font-bold text-ranch-red">$40/hour</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                    <div>
-                      <span className="font-semibold">Single Open Play</span>
-                      <span className="text-gray-500 ml-2">(1 player)</span>
+                  </CardContent>
+                </Card>
+
+                {/* Regular Members */}
+                <Card className="border-2 border-ranch-red">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h5 className="font-bold text-ranch-charcoal mb-1">Members</h5>
+                        <p className="text-sm text-gray-600 mb-3">$49 initiation fee • 2 weeks advance booking</p>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Monthly Membership:</span>
+                            <span className="font-semibold">$18/month</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Court Rental:</span>
+                            <span className="font-semibold">$40/hr ($10/person)</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Open Play:</span>
+                            <span className="font-semibold">$10 for 90 mins</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <span className="font-bold text-ranch-red">$15/hour</span>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-3">
-                  Monthly membership ($25/mo) required. Open play bookings share courts with other players.
-                </p>
+                  </CardContent>
+                </Card>
+
+                {/* Family Add-ons */}
+                <Card className="border border-gray-300">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h5 className="font-bold text-ranch-charcoal mb-1">Family Add-ons</h5>
+                        <p className="text-sm text-gray-600 mb-3">Not for initial members • 2 weeks advance booking</p>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Monthly Membership:</span>
+                            <span className="font-semibold">$15/month</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Court Rental:</span>
+                            <span className="font-semibold">$40/hr ($10/person)</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Open Play:</span>
+                            <span className="font-semibold">$10 for 90 mins</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Pay to Play */}
+                <Card className="border border-gray-300 bg-gray-50">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h5 className="font-bold text-ranch-charcoal mb-1">Pay to Play</h5>
+                        <p className="text-sm text-gray-600 mb-3">No membership required • 2 days advance booking</p>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Court Rental:</span>
+                            <span className="font-semibold">$52/hr ($13/person)</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Open Play:</span>
+                            <span className="font-semibold">$15 for 90 mins</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
@@ -255,113 +340,34 @@ export default function Services() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 mb-16">
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl text-ranch-charcoal">Self Boarding</CardTitle>
-                <div className="text-3xl font-bold text-ranch-red mt-2">$600<span className="text-base text-gray-500">/month</span></div>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-grow">
-                <p className="text-sm text-gray-600 mb-4">
-                  For the hands-on owner. We provide the space, you provide the care.
-                </p>
-                <ul className="space-y-3 text-sm flex-grow">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>Spacious stall and pasture access</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>You provide all feed and hay</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>You manage all cleaning and turnout</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>Full access to riding facilities and trails</span>
-                  </li>
-                </ul>
-                <Badge className="w-full mt-6 bg-blue-100 text-blue-800">DIY & Save</Badge>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-ranch-red flex flex-col">
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl text-ranch-charcoal">Full Boarding</CardTitle>
-                <div className="text-3xl font-bold text-ranch-red mt-2">$2000<span className="text-base text-gray-500">/month</span></div>
-              </CardHeader>
-              <CardContent className="flex flex-col flex-grow">
-                <p className="text-sm text-gray-600 mb-4">
-                  Our all-inclusive, worry-free solution for premier horse care.
-                </p>
-                <ul className="space-y-3 text-sm flex-grow">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>All-inclusive professional care</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>Climate-controlled stall environment</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>Premium feed, hay, and supplements</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>Daily cleaning, turnout, and grooming</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-ranch-red flex-shrink-0" />
-                    <span>Full coordination of vet & farrier</span>
-                  </li>
-                </ul>
-                <Badge className="w-full mt-6 bg-ranch-red text-white">All-Inclusive Luxury</Badge>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/e47148228_ScreenShot2025-12-13at44513PM.png"
-                alt="Horse stalls at Paddock & Paddle"
-                className="rounded-2xl shadow-2xl"
-              />
-            </div>
-            <div>
-              <h3 className="text-3xl font-bold text-ranch-charcoal mb-6">
-                Exceptional Horse Care
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="bg-white rounded-2xl shadow-xl p-12 border-2 border-ranch-sage">
+              <h3 className="text-3xl font-bold text-ranch-charcoal mb-4">
+                Coming Soon
               </h3>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3">
-                  <Heart className="w-6 h-6 text-ranch-red" />
-                  <span className="text-lg">Experienced, caring staff available 24/7</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Shield className="w-6 h-6 text-ranch-red" />
-                  <span className="text-lg">Comprehensive insurance coverage</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-6 h-6 text-ranch-red" />
-                  <span className="text-lg">Miles of scenic riding trails</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Star className="w-6 h-6 text-ranch-red" />
-                  <span className="text-lg">Climate-controlled facilities</span>
-                </div>
-              </div>
-
+              <p className="text-5xl font-bold text-ranch-red mb-6">
+                Summer 2026
+              </p>
+              <p className="text-lg text-gray-600 mb-8">
+                We're excited to announce that our premium equestrian boarding services will be launching in Summer 2026. 
+                Stay tuned for world-class horse care facilities featuring spacious stalls, professional staff, 
+                and exceptional amenities for both you and your horses.
+              </p>
               <Button
                 size="lg"
                 className="ranch-gradient text-white px-10 py-4"
                 onClick={() => setActiveBookingForm('boarding')}
               >
-                Request Boarding Information
+                Join the Waitlist
               </Button>
+            </div>
+
+            <div className="mt-12">
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68d354dbd88e97af4e6c67a5/e47148228_ScreenShot2025-12-13at44513PM.png"
+                alt="Horse stalls at Paddock & Paddle"
+                className="rounded-2xl shadow-2xl w-full"
+              />
             </div>
           </div>
         </div>
