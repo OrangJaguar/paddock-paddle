@@ -17,8 +17,7 @@ import {
   DollarSign,
   CheckCircle
 } from "lucide-react";
-import PicleballBookingForm from "../components/services/PicleballBookingForm";
-import BoardingInquiryForm from "../components/services/BoardingInquiryForm";
+import CourtReserveModal from "../components/CourtReserveModal";
 
 const faqs = [
   {
@@ -79,7 +78,7 @@ const faqs = [
 ];
 
 export default function Services() {
-  const [activeBookingForm, setActiveBookingForm] = useState(null);
+  const [showCourtReserveModal, setShowCourtReserveModal] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState(null);
 
   const toggleFAQ = (index) => {
@@ -114,7 +113,7 @@ export default function Services() {
             <Button 
               size="lg" 
               className="ranch-gradient text-white px-8 py-4"
-              onClick={() => setActiveBookingForm('pickleball')}
+              onClick={() => setShowCourtReserveModal(true)}
             >
               Book Pickleball Court
             </Button>
@@ -122,7 +121,7 @@ export default function Services() {
               variant="outline" 
               size="lg" 
               className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-ranch-red px-8 py-4"
-              onClick={() => setActiveBookingForm('boarding')}
+              onClick={() => setShowCourtReserveModal(true)}
             >
               Inquire About Boarding
             </Button>
@@ -300,7 +299,7 @@ export default function Services() {
             <Button
               size="lg"
               className="ranch-gradient text-white px-10 py-4"
-              onClick={() => setActiveBookingForm('pickleball')}
+              onClick={() => setShowCourtReserveModal(true)}
             >
               Reserve Your Court Now
             </Button>
@@ -416,7 +415,7 @@ export default function Services() {
               <Button
                 size="lg"
                 className="ranch-gradient text-white px-10 py-4"
-                onClick={() => setActiveBookingForm('boarding')}
+                onClick={() => setShowCourtReserveModal(true)}
               >
                 Join the Waitlist
               </Button>
@@ -490,14 +489,11 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Booking Forms */}
-      {activeBookingForm === 'pickleball' && (
-        <PicleballBookingForm onClose={() => setActiveBookingForm(null)} />
-      )}
-      
-      {activeBookingForm === 'boarding' && (
-        <BoardingInquiryForm onClose={() => setActiveBookingForm(null)} />
-      )}
+      {/* Court Reserve Modal */}
+      <CourtReserveModal
+        isOpen={showCourtReserveModal}
+        onClose={() => setShowCourtReserveModal(false)}
+      />
     </div>
   );
 }

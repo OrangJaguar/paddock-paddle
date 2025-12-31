@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
 import { Phone, Mail, MapPin, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ProfileMenu from "@/components/auth/ProfileMenu";
-import AuthModal from "@/components/auth/AuthModal";
-import PicleballBookingForm from "@/components/services/PicleballBookingForm";
+import CourtReserveModal from "@/components/CourtReserveModal";
 
 export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState("login");
-  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [showCourtReserveModal, setShowCourtReserveModal] = useState(false);
 
   // SEO: Update page title and meta tags based on current page
   useEffect(() => {
@@ -76,31 +70,7 @@ export default function Layout({ children, currentPageName }) {
 
   }, [currentPageName, location.pathname]);
 
-  useEffect(() => {
-    loadUser();
-  }, []);
 
-  const loadUser = async () => {
-    try {
-      const isAuth = await base44.auth.isAuthenticated();
-      if (isAuth) {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-      }
-    } catch (error) {
-      setUser(null);
-    }
-  };
-
-  const handleLogout = async () => {
-    await base44.auth.logout();
-    setUser(null);
-  };
-
-  const handleLoginClick = (tab = "login") => {
-    setAuthModalTab(tab);
-    setShowAuthModal(true);
-  };
 
   const navigationItems = [
     { name: "Home", path: createPageUrl("Homepage") },
@@ -257,16 +227,11 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
               ))}
               <Button 
-                onClick={() => setShowBookingForm(true)}
+                onClick={() => setShowCourtReserveModal(true)}
                 className="ranch-gradient text-white hover:opacity-90 transition-opacity duration-200"
               >
                 Book Now
               </Button>
-              <ProfileMenu 
-                user={user} 
-                onLogout={handleLogout}
-                onLoginClick={() => handleLoginClick("login")}
-              />
             </div>
 
             {/* Mobile Menu Button */}
@@ -305,44 +270,13 @@ export default function Layout({ children, currentPageName }) {
               ))}
               <Button 
                 onClick={() => {
-                  setShowBookingForm(true);
+                  setShowCourtReserveModal(true);
                   setMobileMenuOpen(false);
                 }}
                 className="ranch-gradient text-white w-full mt-4"
               >
                 Book Now
               </Button>
-              {user ? (
-                <div className="pt-4 border-t space-y-3">
-                  <Link 
-                    to={createPageUrl("Profile")} 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-ranch-charcoal hover:text-ranch-red"
-                  >
-                    Account Settings
-                  </Link>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="block w-full text-left py-2 text-red-600"
-                  >
-                    Log Out
-                  </button>
-                </div>
-              ) : (
-                <Button 
-                  onClick={() => {
-                    handleLoginClick("login");
-                    setMobileMenuOpen(false);
-                  }}
-                  variant="outline"
-                  className="w-full mt-4 border-ranch-red text-ranch-red"
-                >
-                  Sign In
-                </Button>
-              )}
             </div>
           </div>
         )}
@@ -397,18 +331,11 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-        onSuccess={loadUser}
-        defaultTab={authModalTab}
+      {/* Court Reserve Modal */}
+      <CourtReserveModal
+        isOpen={showCourtReserveModal}
+        onClose={() => setShowCourtReserveModal(false)}
       />
-
-      {/* Booking Form */}
-      {showBookingForm && (
-        <PicleballBookingForm onClose={() => setShowBookingForm(false)} />
-      )}
     </div>
   );
 }
