@@ -303,6 +303,9 @@ export default function Services() {
             >
               Reserve Your Court Now
             </Button>
+            <p className="text-xs text-gray-400 mt-2">
+              * Account required to reserve courts, even for pay-to-play
+            </p>
           </div>
         </div>
       </section>

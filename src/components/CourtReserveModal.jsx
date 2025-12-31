@@ -26,12 +26,24 @@ export default function CourtReserveModal({ isOpen, onClose }) {
         
         <div className="py-6 space-y-4">
           <p className="text-center text-gray-600">
-            We're currently in the process of switching to <strong>Court Reserve</strong> to handle all booking and payment processing.
+            We use <strong>Court Reserve</strong> to handle all booking and payment processing.
           </p>
+          
+          <a
+            href="https://app.courtreserve.com/Account/Register?isMobileLayout=True&t=2&orgId=17183"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button 
+              className="w-full ranch-gradient text-white"
+            >
+              Go to Court Reserve
+            </Button>
+          </a>
           
           <div className="bg-ranch-cream p-4 rounded-lg space-y-3">
             <p className="text-sm text-gray-700 text-center">
-              If you need assistance with booking, please reach out to us:
+              Need assistance? Contact us:
             </p>
             
             <div className="flex flex-col gap-2">
@@ -52,13 +64,6 @@ export default function CourtReserveModal({ isOpen, onClose }) {
               </a>
             </div>
           </div>
-          
-          <Button 
-            onClick={onClose}
-            className="w-full ranch-gradient text-white"
-          >
-            Got It
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
