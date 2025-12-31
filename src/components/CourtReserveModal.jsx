@@ -14,7 +14,7 @@ export default function CourtReserveModal({ isOpen, onClose }) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-ranch-charcoal text-2xl">
-            Booking System Update
+            Book Your Court
           </DialogTitle>
           <button
             onClick={onClose}
@@ -24,9 +24,10 @@ export default function CourtReserveModal({ isOpen, onClose }) {
           </button>
         </DialogHeader>
         
-        <div className="py-6 space-y-4">
-          <p className="text-center text-gray-600">
-            We use <strong>Court Reserve</strong> to handle all booking and payment processing.
+        <div className="pt-4 pb-6 space-y-5">
+          <p className="text-center text-gray-600 px-2">
+            We use <strong>Court Reserve</strong> to handle all booking and payments. 
+            Click below to log in or create your account to reserve courts.
           </p>
           
           <a
@@ -37,19 +38,19 @@ export default function CourtReserveModal({ isOpen, onClose }) {
             <Button 
               className="w-full ranch-gradient text-white"
             >
-              Go to Court Reserve
+              Login / Sign Up
             </Button>
           </a>
           
-          <div className="bg-ranch-cream p-4 rounded-lg space-y-3">
-            <p className="text-sm text-gray-700 text-center">
+          <div className="bg-ranch-cream p-4 rounded-lg">
+            <p className="text-sm text-gray-700 text-center mb-3">
               Need assistance? Contact us:
             </p>
             
             <div className="flex flex-col gap-2">
               <a 
                 href="tel:+16144954995" 
-                className="flex items-center justify-center gap-2 text-ranch-red hover:underline"
+                className="flex items-center justify-center gap-2 text-ranch-red hover:underline text-sm"
               >
                 <Phone className="w-4 h-4" />
                 <span>(614) 495-4995</span>
@@ -57,7 +58,7 @@ export default function CourtReserveModal({ isOpen, onClose }) {
               
               <a 
                 href="mailto:info@paddockandpaddle.com" 
-                className="flex items-center justify-center gap-2 text-ranch-red hover:underline"
+                className="flex items-center justify-center gap-2 text-ranch-red hover:underline text-sm"
               >
                 <Mail className="w-4 h-4" />
                 <span>info@paddockandpaddle.com</span>
