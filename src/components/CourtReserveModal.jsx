@@ -12,7 +12,7 @@ export default function CourtReserveModal({ isOpen, onClose }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+        <DialogHeader className="space-y-2">
           <DialogTitle className="text-center text-ranch-charcoal text-2xl">
             Book Your Court
           </DialogTitle>
@@ -24,8 +24,8 @@ export default function CourtReserveModal({ isOpen, onClose }) {
           </button>
         </DialogHeader>
         
-        <div className="pt-4 pb-6 space-y-5">
-          <p className="text-center text-gray-600 px-2">
+        <div className="pt-3 pb-6 space-y-3">
+          <p className="text-center text-gray-600 px-2 leading-relaxed">
             We use <strong>Court Reserve</strong> to handle all booking and payments. 
             Click below to log in or create your account to reserve courts.
           </p>
