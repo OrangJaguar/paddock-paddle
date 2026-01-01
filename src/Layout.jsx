@@ -30,7 +30,7 @@ export default function Layout({ children, currentPageName }) {
     };
 
     document.title = pageTitles[currentPageName] || 'Paddock & Paddle - Dublin Ohio';
-    
+
     // Update meta description
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
@@ -73,11 +73,11 @@ export default function Layout({ children, currentPageName }) {
 
 
   const navigationItems = [
-    { name: "Home", path: createPageUrl("Homepage") },
-    { name: "About", path: createPageUrl("About") },
-    { name: "Services", path: createPageUrl("Services") },
-    { name: "Contact", path: createPageUrl("Contact") }
-  ];
+  { name: "Home", path: createPageUrl("Homepage") },
+  { name: "About", path: createPageUrl("About") },
+  { name: "Services", path: createPageUrl("Services") },
+  { name: "Contact", path: createPageUrl("Contact") }];
+
 
   return (
     <div className="min-h-screen bg-white text-ranch-charcoal">
@@ -108,41 +108,41 @@ export default function Layout({ children, currentPageName }) {
           "email": "info@paddockandpaddle.com",
           "priceRange": "$$-$$$",
           "openingHoursSpecification": [
-            {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              "opens": "06:00",
-              "closes": "22:00"
-            },
-            {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": ["Saturday", "Sunday"],
-              "opens": "07:00",
-              "closes": "22:00"
-            }
-          ],
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "06:00",
+            "closes": "22:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Saturday", "Sunday"],
+            "opens": "07:00",
+            "closes": "22:00"
+          }],
+
           "sameAs": [
-            "https://www.facebook.com/profile.php?id=61583481638835",
-            "https://www.instagram.com/paddockandpaddle"
-          ],
+          "https://www.facebook.com/profile.php?id=61583481638835",
+          "https://www.instagram.com/paddockandpaddle"],
+
           "hasMap": "https://maps.google.com/?q=8220+Dublin+Rd+Delaware+OH+43015",
           "amenityFeature": [
-            {
-              "@type": "LocationFeatureSpecification",
-              "name": "Indoor Pickleball Courts",
-              "value": "5 courts"
-            },
-            {
-              "@type": "LocationFeatureSpecification",
-              "name": "Horse Boarding",
-              "value": "10 stalls"
-            },
-            {
-              "@type": "LocationFeatureSpecification",
-              "name": "Parking",
-              "value": "Free parking available"
-            }
-          ]
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Indoor Pickleball Courts",
+            "value": "5 courts"
+          },
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Horse Boarding",
+            "value": "10 stalls"
+          },
+          {
+            "@type": "LocationFeatureSpecification",
+            "name": "Parking",
+            "value": "Free parking available"
+          }]
+
         })}
       </script>
 
@@ -180,8 +180,8 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Grand Opening Banner */}
       <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 py-3 text-center">
-        <p className="text-ranch-charcoal font-bold text-sm md:text-base">
-          🎉 GRAND OPENING • JANUARY 4TH, 2025 • JOIN US!
+        <p className="text-ranch-charcoal font-bold text-sm md:text-base">🎉 GRAND OPENING • JANUARY 4TH, 2025 @ 12 PM • JOIN US!
+
         </p>
       </div>
 
@@ -212,24 +212,24 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`font-medium transition-colors duration-200 ${
-                    location.pathname === item.path
-                      ? "text-ranch-red border-b-2 border-ranch-red pb-1"
-                      : "text-ranch-charcoal hover:text-ranch-red"
-                  }`}
-                  aria-current={location.pathname === item.path ? "page" : undefined}
-                >
+              {navigationItems.map((item) =>
+              <Link
+                key={item.name}
+                to={item.path}
+                className={`font-medium transition-colors duration-200 ${
+                location.pathname === item.path ?
+                "text-ranch-red border-b-2 border-ranch-red pb-1" :
+                "text-ranch-charcoal hover:text-ranch-red"}`
+                }
+                aria-current={location.pathname === item.path ? "page" : undefined}>
+
                   {item.name}
                 </Link>
-              ))}
-              <Button 
+              )}
+              <Button
                 onClick={() => setShowCourtReserveModal(true)}
-                className="ranch-gradient text-white hover:opacity-90 transition-opacity duration-200"
-              >
+                className="ranch-gradient text-white hover:opacity-90 transition-opacity duration-200">
+
                 Book Now
               </Button>
             </div>
@@ -239,47 +239,47 @@ export default function Layout({ children, currentPageName }) {
               className="md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6 text-ranch-charcoal" />
-              ) : (
-                <Menu className="w-6 h-6 text-ranch-charcoal" />
-              )}
+              aria-expanded={mobileMenuOpen}>
+
+              {mobileMenuOpen ?
+              <X className="w-6 h-6 text-ranch-charcoal" /> :
+
+              <Menu className="w-6 h-6 text-ranch-charcoal" />
+              }
             </button>
           </div>
         </nav>
 
         {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t absolute w-full z-40">
+        {mobileMenuOpen &&
+        <div className="md:hidden bg-white border-t absolute w-full z-40">
             <div className="px-4 py-6 space-y-4">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`block py-2 font-medium transition-colors duration-200 ${
-                    location.pathname === item.path
-                      ? "text-ranch-red"
-                      : "text-ranch-charcoal hover:text-ranch-red"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+              {navigationItems.map((item) =>
+            <Link
+              key={item.name}
+              to={item.path}
+              className={`block py-2 font-medium transition-colors duration-200 ${
+              location.pathname === item.path ?
+              "text-ranch-red" :
+              "text-ranch-charcoal hover:text-ranch-red"}`
+              }
+              onClick={() => setMobileMenuOpen(false)}>
+
                   {item.name}
                 </Link>
-              ))}
-              <Button 
-                onClick={() => {
-                  setShowCourtReserveModal(true);
-                  setMobileMenuOpen(false);
-                }}
-                className="ranch-gradient text-white w-full mt-4"
-              >
+            )}
+              <Button
+              onClick={() => {
+                setShowCourtReserveModal(true);
+                setMobileMenuOpen(false);
+              }}
+              className="ranch-gradient text-white w-full mt-4">
+
                 Book Now
               </Button>
             </div>
           </div>
-        )}
+        }
       </header>
 
       {/* Main Content */}
@@ -334,8 +334,8 @@ export default function Layout({ children, currentPageName }) {
       {/* Court Reserve Modal */}
       <CourtReserveModal
         isOpen={showCourtReserveModal}
-        onClose={() => setShowCourtReserveModal(false)}
-      />
-    </div>
-  );
+        onClose={() => setShowCourtReserveModal(false)} />
+
+    </div>);
+
 }
