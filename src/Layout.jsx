@@ -180,7 +180,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Grand Opening Banner */}
       <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 py-3 text-center">
-        <p className="text-ranch-charcoal font-bold text-sm md:text-base">🎉 GRAND OPENING • JANUARY 4TH, 2025 @ 12 PM • JOIN US!
+        <p className="text-ranch-charcoal font-bold text-sm md:text-base">🎉 GRAND OPENING • JANUARY 4TH, 2026 @ 12 PM • JOIN US!
 
         </p>
       </div>
