@@ -29,6 +29,15 @@ export default function CourtReserveModal({ isOpen, onClose }) {
 
           </p>
           
+          <a
+            href="https://app.courtreserve.com/Account/Register?isMobileLayout=True&t=2&orgId=17183"
+            target="_blank"
+            rel="noopener noreferrer">
+            <Button className="w-full ranch-gradient text-white">
+              Login / Sign Up
+            </Button>
+          </a>
+          
           <div className="bg-ranch-cream p-4 rounded-lg space-y-3">
             <p className="text-sm text-gray-700 text-center">
               If you need assistance with booking, please reach out to us:
