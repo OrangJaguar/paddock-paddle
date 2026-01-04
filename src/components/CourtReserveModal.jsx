@@ -24,7 +24,7 @@ export default function CourtReserveModal({ isOpen, onClose }) {
           </button>
         </DialogHeader>
         
-        <div className="py-6 space-y-4">
+        <div className="py-6 space-y-6">
           <p className="text-center text-gray-600 px-2 leading-relaxed">We use Court Reserve to handle all booking and payments. Click below to log in or create your account to reserve courts.
 
           </p>
