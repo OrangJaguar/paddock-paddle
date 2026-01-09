@@ -178,9 +178,9 @@ export default function Layout({ children, currentPageName }) {
         }
       `}</style>
 
-      {/* Grand Opening Banner */}
+      {/* Special Offer Banner */}
       <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 py-3 text-center">
-        <p className="text-ranch-charcoal font-bold text-sm md:text-base">🎉 GRAND OPENING • JANUARY 4TH, 2026 @ 12 PM • JOIN US!
+        <p className="text-ranch-charcoal font-bold text-sm md:text-base">🎾 OPEN PLAY FOR MEMBERS • NOW ONLY $5/90 MINUTES!
 
         </p>
       </div>

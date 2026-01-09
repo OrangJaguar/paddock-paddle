@@ -141,51 +141,7 @@ export default function Services() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {/* First 50 Members - Featured */}
-            <Card className="relative overflow-hidden border-4 border-amber-400 shadow-2xl transform hover:scale-105 transition-transform duration-300">
-              <div className="absolute top-0 right-0 bg-amber-500 text-white px-4 py-1 text-xs font-bold transform rotate-12 translate-x-8 translate-y-2">
-                LIMITED
-              </div>
-              <CardHeader className="bg-gradient-to-br from-amber-50 to-amber-100 pb-4">
-                <div className="text-center">
-                  <Badge className="mb-3 bg-amber-500 text-white px-3 py-1">First 50 Members!</Badge>
-                  <CardTitle className="text-2xl font-bold text-ranch-charcoal mb-2">
-                    Initial 50
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 mb-4">No initiation fee</p>
-                  <div className="text-4xl font-bold text-ranch-red mb-1">$12</div>
-                  <p className="text-sm text-gray-500">/month</p>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-3">
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Court Rental:</span>
-                    <span className="font-bold">$36/hr</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Per Person:</span>
-                    <span className="font-bold">$9</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">2-Hour Rate:</span>
-                    <span className="font-bold">$72</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Open Play:</span>
-                    <span className="font-bold">$9/90min</span>
-                  </div>
-                </div>
-                <div className="pt-4 border-t">
-                  <p className="text-xs text-gray-500 flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                    Reserve 1 month ahead
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Members */}
             <Card className="border-2 border-ranch-red shadow-xl hover:shadow-2xl transition-shadow duration-300">
               <CardHeader className="bg-gradient-to-br from-red-50 to-white pb-4">
@@ -295,7 +251,17 @@ export default function Services() {
             </Card>
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 space-y-6">
+            <div className="bg-amber-50 border-2 border-amber-400 rounded-lg p-6 max-w-2xl mx-auto">
+              <p className="text-lg font-semibold text-ranch-charcoal mb-2">
+                ⚠️ Please Register Your Account Before Visiting
+              </p>
+              <p className="text-gray-700">
+                All guests must create an account through Court Reserve before arriving at the facility. 
+                This ensures a smooth check-in process and allows you to reserve courts in advance.
+              </p>
+            </div>
+
             <Button
               size="lg"
               className="ranch-gradient text-white px-10 py-4"
