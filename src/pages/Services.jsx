@@ -166,7 +166,7 @@ export default function Services() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Open Play:</span>
-                    <span className="font-bold">$10/90min</span>
+                    <span className="font-bold">$5/90min</span>
                   </div>
                 </div>
                 <div className="pt-4 border-t">
@@ -202,7 +202,7 @@ export default function Services() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Open Play:</span>
-                    <span className="font-bold">$10/90min</span>
+                    <span className="font-bold">$5/90min</span>
                   </div>
                 </div>
                 <div className="pt-4 border-t">
