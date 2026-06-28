@@ -1,6 +1,6 @@
 # Paddock & Paddle
 
-A full-stack business web application built for a local indoor pickleball and equestrian facility in [City, State].
+A full-stack business web application built for a local indoor pickleball and equestrian facility in Dublin, Ohio.
 
 ## 🏓 Features
 
